@@ -5,11 +5,16 @@ import {
   VStack,
   HStack,
   Text,
+  FormControl,
+  Input,
   Button,
   Checkbox,
   Link,
   Grid,
   useToast,
+  InputGroup,
+  InputLeftElement,
+  FormLabel,
   Box
 } from '@chakra-ui/react';
 import FormInput from '../common/FormInput';
@@ -40,20 +45,20 @@ const LoginForm = () => {
 
       if (response.ok) {
         toast({
-          title: 'login successful',
+          title: '登录成功',
           status: 'success',
           duration: 3000,
           isClosable: true,
         });
-        // save user information to local storage
+        // 保存用户信息到本地存储
         localStorage.setItem('user', JSON.stringify(data.user));
       } else {
         throw new Error(data.message);
       }
     } catch (error) {
       toast({
-        title: 'login failed',
-        description: error instanceof Error ? error.message : 'Please check username and password',
+        title: '登录失败',
+        description: error instanceof Error ? error.message : '请检查用户名和密码',
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -81,7 +86,7 @@ const LoginForm = () => {
       >
         <Container maxW="400px">
           <VStack spacing={8} align="stretch">
-            {/* Logo and title */}
+            {/* Logo和标题 */}
             <VStack align="stretch" spacing={3}>
               <HStack>
                 <Text fontSize="xl" fontWeight="bold" color="gray.800">
@@ -93,7 +98,7 @@ const LoginForm = () => {
               </Text>
             </VStack>
 
-            {/* login form */}
+            {/* 登录表单 */}
             <form onSubmit={handleSubmit} style={{ width: '100%' }}>
               <VStack spacing={4}>
                 <FormInput
@@ -149,7 +154,7 @@ const LoginForm = () => {
               </VStack>
             </form>
 
-            {/* register link */}
+            {/* 注册链接 */}
             <Grid templateColumns="auto auto" justifyContent="center" gap={1}>
               <Text color="gray.600">Don't have an account?</Text>
               <Link color="blue.500" _hover={{ color: 'blue.600' }}>
@@ -157,7 +162,7 @@ const LoginForm = () => {
               </Link>
             </Grid>
 
-            {/* footer */}
+            {/* 页脚 */}
             <Grid templateColumns="1fr 1fr" gap={4}>
               <Text fontSize="sm" color="gray.600">@StorageRoom Management System</Text>
               <Text fontSize="sm" color="gray.500" justifySelf="end">
