@@ -14,6 +14,7 @@ function App() {
       <Layout>
         <Routes>
           <Route path="/items/:id" element={<ItemPage />}/>
+          <Route path="/login" element={<LoginPage />}/>
           <Route path="/" element={<HomePage />}/>
         </Routes>
       </Layout>
