@@ -1,0 +1,78 @@
+.header {
+  display: flex;
+  padding: 15px;
+  justify-content: space-between;
+  align-content: center;
+  align-items: center;
+  border-bottom: 1.5px solid lightgray;
+}
+#buttons-group {
+  display: flex;
+  gap: 15px;
+}
+#home-page {
+  display: flex;
+  width: 100%;
+}
+.panel {
+  border-right: 1.5px solid lightgray;
+  max-width: 25%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  gap: 5px;
+  justify-content: flex-start;
+  padding: 15px;
+}
+#home-content {
+  padding: 15px;
+  width: 100%;
+}
+#view-school {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  width: 100%
+}
+#search-box {
+  flex: 1;
+  min-width: 150px;
+  max-width: 100%;
+}
+#items-grid {
+  padding-top: 15px;
+}
+#sort-box {
+  margin-top: 15px;
+  padding: 15px;
+  background-color: #eef2f6;
+  border-radius: 15px;
+}
+#university-name {
+  background-color: maroon;
+  color: white;
+  padding: 15px;
+  border-radius: 15px;
+}
+.club-item {
+  padding: 15px;
+  border-radius: 15px;
+  border: 1px solid lightgray;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.item-image {
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  max-width: 300px;
+  width: 100%;
+}
+.club-item-page {
+  padding: 15px;
+}
