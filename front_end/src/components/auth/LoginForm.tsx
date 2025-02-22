@@ -31,7 +31,41 @@ const LoginForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    // ... 登录逻辑 ...
+
+    try {
+      const response = await fetch('http://localhost:8000/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast({
+          title: '登录成功',
+          status: 'success',
+          duration: 3000,
+          isClosable: true,
+        });
+        // 保存用户信息到本地存储
+        localStorage.setItem('user', JSON.stringify(data.user));
+      } else {
+        throw new Error(data.message);
+      }
+    } catch (error) {
+      toast({
+        title: '登录失败',
+        description: error instanceof Error ? error.message : '请检查用户名和密码',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
