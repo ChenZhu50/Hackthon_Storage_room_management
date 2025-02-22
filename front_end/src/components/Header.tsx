@@ -1,17 +1,22 @@
 import React from 'react'
 import { Text, Button } from '@chakra-ui/react'
 import { useUser } from './UserState'
+import { Link } from 'react-router-dom'
 
 const Header = () => {
     const {loggedIn} = useUser();
   return (
     <section className='header'>
-        <Text fontSize='4xl'>SustainableShare</Text>
+        <Link to='/'>
+            <Text fontSize='4xl'>SustainableShare</Text>
+        </Link>
         {loggedIn ? (
             null // TODO
         ) : (
             <div id='buttons-group'>
-                <Button>Log In</Button>
+                <Link to='/login'>
+                    <Button>Log In</Button>
+                </Link>
                 <Button>Sign Up</Button>
             </div>
         )}
