@@ -3,65 +3,65 @@ import User from '../models/User';
 
 const router = express.Router();
 
-// 登录路由
+// login in route       
 router.post('/login', (async (req: Request, res: Response) => {
   try {
     const { username, password } = req.body;
-    console.log('Login attempt:', { username, password }); // 调试日志
+    console.log('Login attempt:', { username, password }); // debug log
 
     const user = await User.findOne({ username });
     
     if (!user) {
-      console.log('User not found'); // 调试日志
-      return res.status(401).json({ message: '用户名或密码错误' });
+      console.log('User not found'); // debug log
+      return res.status(401).json({ message: 'User not found' });
     }
     
     if (user.password !== password) {
-      console.log('Password incorrect'); // 调试日志
-      return res.status(401).json({ message: '用户名或密码错误' });
+      console.log('Password incorrect'); // debug log
+      return res.status(401).json({ message: 'UserName or Password is incorrect' });
     }
 
-    console.log('Login successful'); // 调试日志
+    console.log('Login successful'); // debug log
     res.json({ 
-      message: '登录成功',
+      message: 'Login successful',
       user: {
         id: user._id,
         username: user.username
       }
     });
   } catch (error) {
-    console.error('Login error:', error); // 调试日志
-    res.status(500).json({ message: '服务器错误' });
+    console.error('Login error:', error); // debug log
+    res.status(500).json({ message: 'Server error' });
   }
 }) as RequestHandler);
 
-// 注册路由
+// register route
 router.post('/register', (async (req: Request, res: Response) => {
   try {
     const { username, password } = req.body;
-    console.log('Register attempt:', { username }); // 调试日志
+    console.log('Register attempt:', { username }); // debug log
 
-    // 检查用户是否已存在
+    // check if user already exists
     const existingUser = await User.findOne({ username });
     if (existingUser) {
-      return res.status(400).json({ message: '用户名已存在' });
+      return res.status(400).json({ message: 'Username already exists' });
     }
 
-    // 创建新用户
+    // create new user
     const user = new User({ username, password });
     await user.save();
 
-    console.log('Registration successful'); // 调试日志
+    console.log('Registration successful'); // debug log
     res.status(201).json({ 
-      message: '注册成功',
+      message: 'Registration successful',
       user: {
         id: user._id,
         username: user.username
       }
     });
   } catch (error) {
-    console.error('Registration error:', error);
-    res.status(500).json({ message: '服务器错误' });
+    console.error('Registration error:', error); // debug log
+    res.status(500).json({ message: 'Server error' });
   }
 }) as RequestHandler);
 
