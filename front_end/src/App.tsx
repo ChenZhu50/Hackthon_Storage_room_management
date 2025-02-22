@@ -4,13 +4,17 @@ import './App.css'
 import Layout from './components/Layout'
 import { UserState } from './components/UserState'
 import HomePage from './components/HomePage'
+import { Routes, Route } from 'react-router-dom'
+import ItemPage from './components/ItemPage'
 
 function App() {
   return (
     <UserState>
       <Layout>
-        {/* Components go here! */}
-        <HomePage />
+        <Routes>
+          <Route path="/items/:id" element={<ItemPage />}/>
+          <Route path="/" element={<HomePage />}/>
+        </Routes>
       </Layout>
     </UserState>
   )

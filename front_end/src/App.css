@@ -43,3 +43,33 @@
 #items-grid {
   padding-top: 15px;
 }
+#sort-box {
+  margin-top: 15px;
+  padding: 15px;
+  background-color: #eef2f6;
+  border-radius: 15px;
+}
+#university-name {
+  background-color: maroon;
+  color: white;
+  padding: 15px;
+  border-radius: 15px;
+}
+.club-item {
+  padding: 15px;
+  border-radius: 15px;
+  border: 1px solid lightgray;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.item-image {
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  max-width: 300px;
+  width: 100%;
+}
