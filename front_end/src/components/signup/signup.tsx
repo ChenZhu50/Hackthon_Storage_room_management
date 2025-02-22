@@ -39,6 +39,10 @@ const SignUp: React.FC<SignUpProps> = () => {
     }
   };
 
+  const handleButtonClick = () => {
+    navigate("/");
+  };
+
   return (
     <div style={{ maxWidth: '400px', margin: 'auto', padding: '2rem', border: '1px solid #ccc', borderRadius: '8px' }}>
       <h2>Sign Up</h2>
@@ -95,6 +99,9 @@ const SignUp: React.FC<SignUpProps> = () => {
         </div>
         <button type="submit" style={{ padding: '10px 15px', cursor: 'pointer' }}>
           Submit
+        </button>
+        <button type="reset" style={{ padding: '10px 15px', cursor: 'pointer' }} onClick={handleButtonClick}>
+          Go Back
         </button>
       </form>
     </div>

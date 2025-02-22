@@ -28,6 +28,10 @@ const Login: React.FC = () => {
     navigate('/dashboard'); // Change '/dashboard' to your desired route
   };
 
+  const handleButtonClick = () => {
+    navigate("/");
+  };
+
   return (
     <div style={{ maxWidth: '400px', margin: 'auto', padding: '2rem', border: '1px solid #ccc', borderRadius: '8px' }}>
       <h2>Login</h2>
@@ -59,6 +63,9 @@ const Login: React.FC = () => {
         </div>
         <button type="submit" style={{ padding: '10px 15px', cursor: 'pointer' }}>
           Login
+        </button>
+        <button type="reset" style={{ padding: '10px 15px', cursor: 'pointer' }} onClick={handleButtonClick}>
+          Go Back
         </button>
       </form>
     </div>
