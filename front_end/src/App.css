@@ -73,3 +73,70 @@
   max-width: 300px;
   width: 100%;
 }
+
+/* src/App.css */
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+}
+
+th {
+  background-color: #4CAF50; /* Green background */
+  color: white;
+  font-weight: bold;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2; /* Zebra striping */
+}
+
+tr:hover {
+  background-color: #ddd; /* Highlight on hover */
+}
+
+td table {
+  width: 100%;
+  margin-top: 10px;
+  border: none; /* Remove border for nested table */
+}
+
+td table th, td table td {
+  border: 1px solid #ccc;
+  padding: 8px;
+}
+
+td table th {
+  background-color: #f9f9f9; /* Light background for nested table header */
+  color: #333;
+}
+
+@media (max-width: 768px) {
+  table {
+    font-size: 14px; /* Smaller font size on mobile */
+  }
+
+  th, td {
+    padding: 8px; /* Less padding on mobile */
+  }
+}
