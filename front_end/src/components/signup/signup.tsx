@@ -1,4 +1,7 @@
+"use client"
+
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface SignUpProps {}
 
@@ -10,6 +13,7 @@ const SignUp: React.FC<SignUpProps> = () => {
   const [name, setName] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   // Handle form submission
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -29,6 +33,7 @@ const SignUp: React.FC<SignUpProps> = () => {
       // Replace this with your actual API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
       setSuccess(true);
+      navigate("/");
     } catch (err) {
       setError('Failed to sign up. Please try again.');
     }

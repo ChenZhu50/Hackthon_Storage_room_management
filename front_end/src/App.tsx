@@ -1,15 +1,12 @@
 import React from 'react';
-import SignUp from './components/signup';
-import Login from './components/login';
+import HomePage from './components/homepage/homepage';
 import './index.css';
 
 const App: React.FC = () => {
   return (
     <div>
-      <h2>Welcome to the app!</h2>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center',  gap: '20px', padding: '20px'}}>
-        <Login />
-        <SignUp />
+        <HomePage />
       </div>
     </div>
   );
