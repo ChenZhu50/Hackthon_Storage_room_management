@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { 
   Button, 
@@ -22,58 +22,34 @@ interface Item {
   imageUrl: string;
 }
 
-// 测试数据
-const testItems: Item[] = [
-  {
-    id: '1',
-    name: 'Tennis Racket',
-    quantity: 5,
-    clubId: 1,  // 使用数字ID
-    imageUrl: 'https://via.placeholder.com/200'
-  },
-  {
-    id: '2',
-    name: 'Basketball',
-    quantity: 10,
-    clubId: 1,
-    imageUrl: 'https://via.placeholder.com/200'
-  },
-  {
-    id: '3',
-    name: 'Volleyball',
-    quantity: 8,
-    clubId: 2,  // 不同的俱乐部ID
-    imageUrl: 'https://via.placeholder.com/200'
-  }
-];
-
 const ClubInventoryPage = () => {
   const { id } = useParams();
   const [searchTerm, setSearchTerm] = useState('');
-  const [items, setItems] = useState<Item[]>(testItems);
   
   const {fetchClubId} = useUser();
   const [club, setClub] = useState(null);
-  const admin = params.id === fetchClubId();
+  const [clubItems, setClubItems] = useState([]);
+  const admin = id === fetchClubId();
         
   useEffect(() => {
     const run = async () => {
       await fetch(`http://localhost:8000/clubs/${id}`).then(res => res.json()).then(data => setClub(data));
+      await fetch(`http://localhost:8000/clubs/${id}/items`).then(res => res.json()).then(data => setClubItems(data));
     }
     run();
-  }, [params])
+  }, [id])
 
-  const clubItems = items.filter(item => 
-    item.clubId === clubId &&
-    item.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // const clubItems = items.filter(item => 
+  //   item.clubId === clubId &&
+  //   item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  // );
 
   return (
     <main id="home-content">
       <Container maxW="1440px" py={8}>
         <VStack spacing={8} align="stretch">
           <Flex justify="space-between" align="center">
-            <Text fontSize="4xl">Club Inventory</Text>
+            <Text fontSize="4xl"><b>{club?.name}</b> Club Inventory</Text>
             <HStack spacing={4}>
               <Input
                 placeholder="Search items..."
@@ -90,7 +66,7 @@ const ClubInventoryPage = () => {
             spacing={6}
           >
             {clubItems.map(item => (
-              <ClubItemCard key={item.id} {...item} />
+              <ClubItemCard key={item._id} {...item} />
             ))}
           </SimpleGrid>
         </VStack>
@@ -99,5 +75,4 @@ const ClubInventoryPage = () => {
   );
 };
 
-export default ClubInventoryPage;
 export default ClubInventoryPage;
