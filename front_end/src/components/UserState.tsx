@@ -6,7 +6,11 @@ export const UserState = ({ children }) => {
     const loggedIn = (): boolean => {
       return user ? true : false;
     }
-    const functions = {};
+    const functions = {
+      loggedIn, 
+      setUser,
+      user
+    };
   return (
     <UserContext.Provider value={functions}>
         {children}

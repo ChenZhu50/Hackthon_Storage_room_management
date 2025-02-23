@@ -4,14 +4,19 @@ import { useUser } from './UserState'
 import { Link } from 'react-router-dom'
 
 const Header = () => {
-    const {loggedIn} = useUser();
+    const { user, loggedIn } = useUser();
   return (
     <section className='header'>
         <Link to='/'>
             <Text fontSize='4xl'>SustainableShare</Text>
         </Link>
-        {loggedIn ? (
-            null // TODO
+        {true ? (
+            <div id='buttons-group'>
+                <Link to={`/clubs/${"1"}/inventory`}>
+                    <Button>Club Inventory</Button>
+                </Link>
+                <Button>Sign Out</Button>
+            </div>
         ) : (
             <div id='buttons-group'>
                 <Link to='/login'>
