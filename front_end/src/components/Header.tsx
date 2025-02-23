@@ -10,7 +10,7 @@ const Header = () => {
         <Link to='/'>
             <Text fontSize='4xl'>SustainableShare</Text>
         </Link>
-        {true ? (
+        {loggedIn() ? (
             <div id='buttons-group'>
                 <Link to={`/clubs/${"1"}/inventory`}>
                     <Button>Club Inventory</Button>
