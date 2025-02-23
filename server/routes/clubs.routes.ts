@@ -10,6 +10,21 @@ router.get('/', async (req: Request, res: Response) => {
     res.status(200).send(clubs);
 })
 
+router.get('/:id', async (req: Request, res: Response) => {
+    try {
+        const id = req.params.id;
+        const club = await Club.findById(id);
+        if (!club) {
+            res.status(404).send({message: "Failed to retrieve club by ID"});
+            return;
+        }
+        const {password, likes, clubEmail, ...cleaned} = club.toObject();
+        res.status(200).send(cleaned);
+    } catch (err) {
+        res.status(500).send({message: 'Internal server error'});
+    }  
+})
+
 router.post('/create', async (req, res) => {
     try {
         const data = req.body;
