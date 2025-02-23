@@ -18,27 +18,16 @@ export const UserState = ({ children }) => {
     const loggedIn = (): boolean => {
         return user !== null;
     }
-
-    // 监听 user 状态变化
-    useEffect(() => {
-        if (user) {
-            localStorage.setItem('user', JSON.stringify(user));
-        } else {
-            localStorage.removeItem('user');
-        }
-    }, [user]);
-
-    const value = {
-        user,
-        setUser,
-        loggedIn
+    const functions = {
+      loggedIn, 
+      setUser,
+      user
     };
-
-    return (
-        <UserContext.Provider value={value}>
-            {children}
-        </UserContext.Provider>
-    )
+  return (
+    <UserContext.Provider value={functions}>
+        {children}
+    </UserContext.Provider>
+  )
 }
 
 export const useUser = () => {
