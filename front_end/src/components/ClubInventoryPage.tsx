@@ -18,7 +18,8 @@ interface Item {
   id: string;
   name: string;
   quantity: number;
-  clubId: number;
+  clubId: string;
+  clubName: string;
   imageUrl: string;
 }
 
@@ -57,7 +58,12 @@ const ClubInventoryPage = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 width="300px"
               />
-              <Button colorScheme="blue">New Listing</Button>
+              <Button 
+                colorScheme="blue"
+                onClick={() => navigate(`/clubs/${id}/new-listing`)}
+              >
+                New Listing
+              </Button>
             </HStack>
           </Flex>
 

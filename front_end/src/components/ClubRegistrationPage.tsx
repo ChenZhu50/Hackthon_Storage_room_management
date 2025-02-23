@@ -1,75 +1,236 @@
 "use client"
 
-import React, { useState } from 'react';
-import { Button, Textarea, Input } from '@chakra-ui/react';
+import React, { useState, useCallback, useEffect } from 'react';
+import { Button, Textarea, Input, FormControl, FormLabel, FormErrorMessage, Select } from '@chakra-ui/react';
+import { Link } from 'react-router-dom';
+
+interface Leader {
+  name: string;
+  email: string;
+}
 
 interface FormData {
   clubName: string;
   description: string;
+  email: string;
+  university: string;
+  password: string;
+  budget: number | '';
+  leaders: Leader[];
+}
+
+interface University {
+  name: string;
 }
 
 const ClubRegister: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
     clubName: '',
     description: '',
+    email: '',
+    university: '',
+    password: '',
+    budget: '',
+    leaders: [{ name: '', email: '' }],
   });
 
   const [errors, setErrors] = useState<Partial<FormData>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [universities, setUniversities] = useState<University[]>([]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setFormData((prevData) => ({
+      ...prevData,
       [name]: value,
-    });
+    }));
+  }, []);
+
+  const handleLeaderChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    const updatedLeaders = [...formData.leaders];
+    updatedLeaders[index] = { ...updatedLeaders[index], [name]: value };
+    setFormData((prevData) => ({
+      ...prevData,
+      leaders: updatedLeaders,
+    }));
+  };
+
+  const addLeader = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      leaders: [...prevData.leaders, { name: '', email: '' }],
+    }));
   };
 
   const validate = (): boolean => {
     const newErrors: Partial<FormData> = {};
     if (!formData.clubName) newErrors.clubName = 'Club name is required';
     if (!formData.description) newErrors.description = 'Description is required';
+    if (!formData.email) newErrors.email = 'Email is required';
+    if (!formData.university) newErrors.university = 'University is required';
+    if (!formData.password) newErrors.password = 'Password is required';
+    if (formData.budget === '' || formData.budget < 0) newErrors.budget = 'Budget must be a positive number';
+
+    // Validate leaders
+    formData.leaders.forEach((leader, index) => {
+      if (!leader.name) newErrors[`leaderName${index}`] = 'Leader name is required';
+      if (!leader.email) newErrors[`leaderEmail${index}`] = 'Leader email is required';
+    });
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validate()) {
+      setIsSubmitting(true);
       console.log('Form submitted:', formData);
       // Here you can handle the form submission, e.g., send data to an API
-      setFormData({ clubName: '', description: '' }); // Reset form
+      setFormData({ clubName: '', description: '', email: '', university: '', password: '', budget: '', leaders: [{ name: '', email: '' }] }); // Reset form
       setErrors({}); // Clear errors
+      setIsSubmitting(false);
     }
-  };
+  }, [formData]);
+
+  useEffect(() => {
+    const fetchUniversities = async () => {
+      try {
+        const response = await fetch('/api/universities'); // suppose to be the api endpoint
+        const data = await response.json();
+        setUniversities(data);
+      } catch (error) {
+        console.error('Error fetching universities:', error);
+      }
+    };
+
+    fetchUniversities();
+  }, []);
 
   return (
-    <div style={{ maxWidth: '400px', margin: 'auto', padding: '2rem', border: '1px solid #ccc', borderRadius: '8px', backgroundColor: '#CCCCCC'}}>
+    <div style={{ margin: 'auto', padding: '2rem', border: '1px solid #ccc', backgroundColor: '#ADD8E6'}}>
       <h1>Club Registration</h1>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>
-            Club Name:
-            <Input
-              type="text"
-              name="clubName"
-              value={formData.clubName}
-              onChange={handleChange}
-            />
-          </label>
-          {errors.clubName && <p style={{ color: 'red' }}>{errors.clubName}</p>}
-        </div>
-        <div>
-          <label>
-            Description:
-            <Textarea
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-            />
-          </label>
-          {errors.description && <p style={{ color: 'red' }}>{errors.description}</p>}
-        </div>
-        <Button type="submit">Register Club</Button>
+        <FormControl isInvalid={!!errors.clubName}>
+          <FormLabel htmlFor="clubName">Club Name</FormLabel>
+          <Input
+            id="clubName"
+            type="text"
+            name="clubName"
+            value={formData.clubName}
+            onChange={handleChange}
+            aria-describedby="clubName-error"
+            maxWidth="400px"
+          />
+          <FormErrorMessage id="clubName-error">{errors.clubName}</FormErrorMessage>
+        </FormControl> 
+        <FormControl isInvalid={!!errors.description} mt={4}>
+          <FormLabel htmlFor="description">Description</FormLabel>
+          <Textarea
+            id="description"
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            aria-describedby="description-error"
+            maxWidth="400px"
+          />
+                    <FormErrorMessage id="description-error">{errors.description}</FormErrorMessage>
+        </FormControl>
+        <FormControl isInvalid={!!errors.email} mt={4}>
+          <FormLabel htmlFor="email">Email</FormLabel>
+          <Input
+            id="email"
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            aria-describedby="email-error"
+            maxWidth="400px"
+          />
+          <FormErrorMessage id="email-error">{errors.email}</FormErrorMessage>
+        </FormControl>
+        <FormControl isInvalid={!!errors.university} mt={4}>
+          <FormLabel htmlFor="university">University</FormLabel>
+          <Select
+            id="university"
+            name="university"
+            value={formData.university}
+            onChange={handleChange}
+            aria-describedby="university-error"
+            maxWidth="400px"
+          >
+            <option value="">Select University</option>
+            {universities.map((university) => (
+              <option key={university.name} value={university.name}>
+                {university.name}
+              </option>
+            ))}
+          </Select>
+          <FormErrorMessage id="university-error">{errors.university}</FormErrorMessage>
+        </FormControl>
+        <FormControl isInvalid={!!errors.password} mt={4}>
+          <FormLabel htmlFor="password">Password</FormLabel>
+          <Input
+            id="password"
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            aria-describedby="password-error"
+            maxWidth="400px"
+          />
+          <FormErrorMessage id="password-error">{errors.password}</FormErrorMessage>
+        </FormControl>
+        <FormControl isInvalid={!!errors.budget} mt={4}>
+          <FormLabel htmlFor="budget">Budget ($)</FormLabel>
+          <Input
+            id="budget"
+            type="number"
+            name="budget"
+            value={formData.budget}
+            onChange={handleChange}
+            aria-describedby="budget-error"
+            maxWidth="400px"
+          />
+          <FormErrorMessage id="budget-error">{errors.budget}</FormErrorMessage>
+        </FormControl>
+        <h2>Club Leaders</h2>
+        {formData.leaders.map((leader, index) => (
+          <div key={index}>
+            <FormControl isInvalid={!!errors[`leaderName${index}`]}>
+              <FormLabel htmlFor={`leaderName${index}`}>Leader Name</FormLabel>
+              <Input
+                id={`leaderName${index}`}
+                type="text"
+                name="name"
+                value={leader.name}
+                onChange={(e) => handleLeaderChange(index, e)}
+                aria-describedby={`leaderName${index}-error`}
+                maxWidth="400px"
+              />
+              <FormErrorMessage id={`leaderName${index}-error`}>{errors[`leaderName${index}`]}</FormErrorMessage>
+            </FormControl>
+            <FormControl isInvalid={!!errors[`leaderEmail${index}`]} mt={2}>
+              <FormLabel htmlFor={`leaderEmail${index}`}>Leader Email</FormLabel>
+              <Input
+                id={`leaderEmail${index}`}
+                type="email"
+                name="email"
+                value={leader.email}
+                onChange={(e) => handleLeaderChange(index, e)}
+                aria-describedby={`leaderEmail${index}-error`}
+                maxWidth="400px"
+              />
+              <FormErrorMessage id={`leaderEmail${index}-error`}>{errors[`leaderEmail${index}`]}</FormErrorMessage>
+            </FormControl>
+          </div>
+        ))}
+        <Button onClick={addLeader} mt={4}>Add Another Leader</Button>
+        <Button type="submit" isLoading={isSubmitting} mt={4}>Register Club</Button>
+        <Link to='/'>
+          <Button mt={4} variant="outline">Cancel</Button>
+        </Link>
       </form>
     </div>
   );
