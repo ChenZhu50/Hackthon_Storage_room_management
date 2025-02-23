@@ -10,6 +10,15 @@ import ItemPage from './components/ItemPage'
 import ClubRegistrationPage from './components/ClubRegistrationPage'
 import ClubInventoryPage from './components/ClubInventoryPage';
 
+
+interface Item {
+  id: string;
+  name: string;
+  quality: string;  // 'Good', 'Fair' 等
+  club: string;
+  imageUrl: string;
+}
+
 function App() {
   return (
     <UserState>
