@@ -56,7 +56,7 @@ const ClubRegister: React.FC = () => {
   }, [formData]);
 
   return (
-    <div style={{ margin: 'auto', padding: '2rem', border: '1px solid #ccc', backgroundColor: '#CCCCCC'}}>
+    <div style={{ margin: 'auto', padding: '2rem', border: '1px solid #ccc', backgroundColor: '#ADD8E6'}}>
       <h1>Club Registration</h1>
       <form onSubmit={handleSubmit}>
         <FormControl isInvalid={!!errors.clubName}>
