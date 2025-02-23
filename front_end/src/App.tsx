@@ -9,6 +9,7 @@ import { Routes, Route } from 'react-router-dom'
 import ItemPage from './components/ItemPage'
 import ClubRegistrationPage from './components/ClubRegistrationPage'
 import ClubInventoryPage from './components/ClubInventoryPage';
+import NewListingPage from './pages/NewListingPage';
 
 
 interface Item {
@@ -28,6 +29,7 @@ function App() {
           <Route path="/login" element={<LoginPage />}/>
           <Route path="/register" element={<ClubRegistrationPage />}/>
           <Route path="/clubs/:id/inventory" element={<ClubInventoryPage />}/>
+          <Route path="/clubs/:id/new-listing" element={<NewListingPage />} />
           <Route path="/" element={<HomePage />}/>
         </Routes>
       </Layout>

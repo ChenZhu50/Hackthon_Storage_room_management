@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { 
   Button, 
   Text, 
@@ -16,7 +16,8 @@ interface Item {
   id: string;
   name: string;
   quantity: number;
-  clubId: number;
+  clubId: string;
+  clubName: string;
   imageUrl: string;
 }
 
@@ -26,33 +27,36 @@ const testItems: Item[] = [
     id: '1',
     name: 'Tennis Racket',
     quantity: 5,
-    clubId: 1,  // 使用数字ID
+    clubId: 'club-1',
+    clubName: 'Tennis Club',
     imageUrl: 'https://via.placeholder.com/200'
   },
   {
     id: '2',
     name: 'Basketball',
     quantity: 10,
-    clubId: 1,
+    clubId: 'club-1',
+    clubName: 'Basketball Club',
     imageUrl: 'https://via.placeholder.com/200'
   },
   {
     id: '3',
     name: 'Volleyball',
     quantity: 8,
-    clubId: 2,  // 不同的俱乐部ID
+    clubId: 'club-2',
+    clubName: 'Volleyball Club',
     imageUrl: 'https://via.placeholder.com/200'
   }
 ];
 
 const ClubInventoryPage = () => {
   const { id } = useParams();
-  const clubId = Number(id);
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [items] = useState<Item[]>(testItems);
 
   const clubItems = items.filter(item => 
-    item.clubId === clubId &&
+    item.clubId === id &&
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -69,7 +73,12 @@ const ClubInventoryPage = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 width="300px"
               />
-              <Button colorScheme="blue">New Listing</Button>
+              <Button 
+                colorScheme="blue"
+                onClick={() => navigate(`/clubs/${id}/new-listing`)}
+              >
+                New Listing
+              </Button>
             </HStack>
           </Flex>
 
