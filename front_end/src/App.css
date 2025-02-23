@@ -73,9 +73,6 @@
   max-width: 300px;
   width: 100%;
 }
-
-/* src/App.css */
-
 body {
   font-family: Arial, sans-serif;
   background-color: #f4f4f4;
@@ -139,4 +136,11 @@ td table th {
   th, td {
     padding: 8px; /* Less padding on mobile */
   }
+}
+.club-item-page {
+  padding: 15px;
+}
+#club-page-header {
+  display: flex;
+  justify-content: space-between;
 }
