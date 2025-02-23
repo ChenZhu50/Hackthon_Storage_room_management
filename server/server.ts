@@ -34,9 +34,7 @@ app.use('/items', itemRoutes);
 
 app.post('/authenticate', async (req, res) => {
   const data = req.body;
-  console.log(data);
   const club = await Club.findOne({clubEmail: data.clubEmail});
-  console.log(club);
   if (!club) {res.status(401).send({error: "This email is not associated with an account."}); return; }
   const passwordVerified = await bcrypt.compare(data.password, club.password);
   if (!passwordVerified) {

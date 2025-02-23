@@ -19,16 +19,24 @@ import { useUser } from "./UserState";
 const ItemPage = () => {
   const { id } = useParams();
   const [itemObject, setItemObject] = useState(null);
+  const [itemRequests, setItemRequests] = useState([]);
   const { user, loggedIn, fetchClubId } = useUser();
   const [liked, setLiked] = useState(false);
 
   const authenticated = loggedIn();
   const isAdmin = authenticated && itemObject?.club._id === fetchClubId();
 
+  const fetchClubNameById = async clubId => {
+    const res = await fetch(`http://localhost:8000/clubs/${clubId}/name`);
+    if (!res.ok) return "None";
+    const data = await res.json();
+    return data.name || 'None';
+  }
+
   useEffect(() => {
     const run = async () => {
-      console.log(id);
       await fetch(`http://localhost:8000/items/${id}`).then(res => res.json()).then(data => setItemObject(data));
+      await fetch(`http://localhost:8000/items/${id}/requests`).then(res => res.json()).then(data => setItemRequests(data));
     }
     run();
   }, [id])
@@ -50,19 +58,7 @@ const ItemPage = () => {
     setLiked(!liked);
   };
 
-  // **示例申请列表**
-  const requests = [
-    {
-      club: "WiCS",
-      quantity: 20,
-      message: "We would like to borrow plates to serve food for the HopperHacks X 2025 event. Thank you!",
-    },
-    {
-      club: "Gourmet Club",
-      quantity: 30,
-      message: "We would like to borrow plates to host a food event on Friday. Thank you!",
-    },
-  ];
+  console.log(itemRequests);
 
   return (
     <Box bg="gray.50" minH="100vh" py={8}>
@@ -113,7 +109,7 @@ const ItemPage = () => {
 
               {authenticated ? (
                 <Flex gap={3}>
-                  {isAdmin ? null : (
+                  {!isAdmin && (
                     <>
                       <IconButton
                         aria-label="Like"
@@ -125,7 +121,7 @@ const ItemPage = () => {
                         onClick={() => handleLike(id)} // 点击切换状态
                       />
                       <Flex>
-                        <RequestModal id={id}/>
+                        <RequestModal id={id} quantity={itemObject?.quantity}/>
                       </Flex>
                     </>
                   )}
@@ -139,22 +135,24 @@ const ItemPage = () => {
       </Box>
 
       {/* 申请列表 Box */}
-      <Box maxW="1200px" mx="auto" mt={6} bg="white" p={6} borderRadius="md" boxShadow="md">
-        <Heading size="md" mb={4}>
-          Requests for this item
-        </Heading>
-        {requests.length > 0 ? (
-          requests.map((req, index) => (
-            <Box key={index} p={4} mb={3} borderWidth="1px" borderRadius="md">
-              <Text fontWeight="bold">{req.club}</Text>
-              <Text>Quantity: {req.quantity}</Text>
-              <Text fontStyle="italic">"{req.message}"</Text>
-            </Box>
-          ))
-        ) : (
-          <Text>No requests yet.</Text>
-        )}
-      </Box>
+      {isAdmin && (
+        <Box maxW="1200px" mx="auto" mt={6} bg="white" p={6} borderRadius="md" boxShadow="md">
+          <Heading size="md" mb={4}>
+            Requests for this item
+          </Heading>
+          {itemRequests.length > 0 ? (
+            itemRequests.map((req, index) => (
+              <Box key={index} p={4} mb={3} borderWidth="1px" borderRadius="md">
+                <Text fontWeight="bold">{req.by.name}</Text>
+                <Text>Quantity: {req.quantity}</Text>
+                <Text fontStyle="italic">"{req.message}"</Text>
+              </Box>
+            ))
+          ) : (
+            <Text>No requests yet.</Text>
+          )}
+        </Box>
+      )}
     </Box>
   );
 };
