@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { Button, Textarea, Input } from '@chakra-ui/react';
+import { Link } from 'react-router-dom';
 
 interface FormData {
   clubName: string;
@@ -70,6 +71,9 @@ const ClubRegister: React.FC = () => {
           {errors.description && <p style={{ color: 'red' }}>{errors.description}</p>}
         </div>
         <Button type="submit">Register Club</Button>
+        <Link to='/'>
+          <Button>Go Back</Button>
+        </Link>
       </form>
     </div>
   );
