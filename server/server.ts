@@ -9,11 +9,7 @@ import clubRoutes from './routes/clubs.routes';
 import itemRoutes from './routes/items.routes';
 import Club from './schemas/Club';
 
-//For env File 
-dotenv.config();
-
 const app: Application = express();
-const port = process.env.PORT || 8000;
 app.use(cors());
 app.use(express.json());
 app.use(session({
@@ -30,7 +26,7 @@ app.use(session({
 
 const db = mongoose.connect('mongodb://127.0.0.1:27017/SustainableShare').catch(err => console.log(err));
 app.get('/', (req: Request, res: Response) => {
-  res.send('Welcome to Express & TypeScript Server');
+  res.send('SERVER!!!');
 });
 
 app.use('/clubs', clubRoutes);
@@ -52,8 +48,8 @@ app.post('/authenticate', async (req, res) => {
   res.status(200).json(cleanedClub);
 });
 
-const server = app.listen(port, () => {
-  console.log(`Server is live at http://localhost:${port}`);
+const server = app.listen(8000, () => {
+  console.log(`Server is live.`);
 });
 
 process.on('SIGINT', async () => {

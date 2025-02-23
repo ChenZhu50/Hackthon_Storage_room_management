@@ -78,6 +78,33 @@ router.put('/like/:itemId', async (req, res) => {
     res.status(200).send("Successful");
 });
 
+router.post('/:id/listings/create', async (req, res) => {
+    const clubId = req.params.id;
+    const listingData = req.body;
+    const newItem = await Item.create(listingData);
+    if (!newItem) {
+        res.status(401).send({error: "Could not create new item."})
+        return;
+    }
+    const updateClubListings = await Club.findByIdAndUpdate(clubId, {'$push': {items: newItem}});
+    console.log(updateClubListings);
+    if (!updateClubListings) {
+        res.status(404).send({error: "Failed to retrieve and update listing."})
+        return;
+    }
+    res.status(200).send(newItem);
+});
+
+router.get('/:id/listings', async (req, res) => {
+    const clubId = req.params.id;
+    const listings = await Club.findById(clubId).populate('items');
+    if (!listings) {
+        res.status(404).send({error: "Failed to retrieve listings."})
+        return;
+    }
+    res.status(200).send(listings.items);
+});
+
 router.post('/testuser', async (req, res) => {
     const newClub = await Club.create({
         name: "Russian Corner",

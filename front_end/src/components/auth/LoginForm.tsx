@@ -13,7 +13,6 @@ import {
   Box
 } from '@chakra-ui/react';
 import FormInput from '../common/FormInput';
-import type { LoginForm as LoginFormType } from '../../types/auth';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../UserState';
 

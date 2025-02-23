@@ -13,6 +13,7 @@ const Header = () => {
       <HStack spacing={4}>
         {loggedIn() ? (
           <>
+            <Text>{user?.name}</Text>
             <Link to={`/clubs/${fetchClubId()}/inventory`}>
               <Button>Club Inventory</Button>
             </Link>

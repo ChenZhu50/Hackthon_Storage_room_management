@@ -40,13 +40,13 @@ const RequestModal = ({ id }) => {
   const handleMakeRequest = async e => {
     e.preventDefault();
     const response = await fetch(`http://localhost:8000/items/${id}/requests/create`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({...request, by: fetchClubId()}),
-      });
-      if (response.ok) navigate(`/items/${id}`);
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({...request, by: fetchClubId()}),
+    });
+    if (response.ok) navigate(`/items/${id}`);
   }
   console.log(request);
   return (

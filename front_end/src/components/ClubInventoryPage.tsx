@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { 
   Button, 
   Text, 
@@ -58,12 +58,13 @@ const ClubInventoryPage = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 width="300px"
               />
-              <Button 
-                colorScheme="blue"
-                onClick={() => navigate(`/clubs/${id}/new-listing`)}
-              >
-                New Listing
-              </Button>
+              <Link to={`/clubs/${id}/new-listing`}>
+                <Button 
+                  colorScheme="blue"
+                >
+                  New Listing
+                </Button>
+              </Link>
             </HStack>
           </Flex>
 
