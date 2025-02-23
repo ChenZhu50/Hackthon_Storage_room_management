@@ -11,6 +11,8 @@ import {
   Flex,
 } from '@chakra-ui/react';
 import ClubItemCard from './ClubItemCard';
+import Items from './Items';
+import { useUser } from './UserState';
 
 interface Item {
   id: string;
@@ -47,9 +49,19 @@ const testItems: Item[] = [
 
 const ClubInventoryPage = () => {
   const { id } = useParams();
-  const clubId = Number(id);
   const [searchTerm, setSearchTerm] = useState('');
-  const [items] = useState<Item[]>(testItems);
+  const [items, setItems] = useState<Item[]>(testItems);
+  
+  const {fetchClubId} = useUser();
+  const [club, setClub] = useState(null);
+  const admin = params.id === fetchClubId();
+        
+  useEffect(() => {
+    const run = async () => {
+      await fetch(`http://localhost:8000/clubs/${id}`).then(res => res.json()).then(data => setClub(data));
+    }
+    run();
+  }, [params])
 
   const clubItems = items.filter(item => 
     item.clubId === clubId &&
