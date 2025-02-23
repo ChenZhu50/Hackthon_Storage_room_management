@@ -14,11 +14,32 @@ import {
   Divider,
   IconButton,
 } from "@chakra-ui/react";
+import { useUser } from "./UserState";
 
 const ItemPage = () => {
   const { itemId } = useParams();
   const [itemObject, setItemObject] = useState(null);
+  const { user, loggedIn, fetchClubId } = useUser();
   const [liked, setLiked] = useState(false);
+
+  const authenticated = loggedIn();
+
+  const handleLike = item => {
+    const like = async () => {
+      const response = await fetch(`http://localhost:8000/clubs/like/${item}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          clubId: fetchClubId(),
+          liked: liked
+        }),
+      });
+    }
+    like();
+    setLiked(!liked);
+  }
 
   // 示例物品数据
   const itemData = {
@@ -89,25 +110,26 @@ const ItemPage = () => {
               <Badge colorScheme="green" fontSize="1.2em">
                 {itemData.status}
               </Badge>
+              
+              {authenticated ? (
+                <Flex gap={3}>
+                  {/* 爱心按钮 */}
+                  <IconButton
+                    aria-label="Like"
+                    icon={liked ? <FaHeart /> : <FaRegHeart />} // 切换填充/空心图标
+                    color={liked ? "red.500" : "gray.500"} // 填充时红色，未填充时灰色
+                    bg="transparent" // 让按钮背景透明，没有方框
+                    _hover={{ color: liked ? "red.600" : "gray.600" }} // 悬停时颜色加深
+                    fontSize="24px" // 让图标更大
+                    onClick={() => handleLike(itemId)} // 点击切换状态
+                  />
 
-              <Flex gap={3}>
-                {/* 爱心按钮 */}
-                <IconButton
-                  aria-label="Like"
-                  icon={liked ? <FaHeart /> : <FaRegHeart />} // 切换填充/空心图标
-                  color={liked ? "red.500" : "gray.500"} // 填充时红色，未填充时灰色
-                  bg="transparent" // 让按钮背景透明，没有方框
-                  _hover={{ color: liked ? "red.600" : "gray.600" }} // 悬停时颜色加深
-                  fontSize="24px" // 让图标更大
-                  onClick={() => setLiked(!liked)} // 点击切换状态
-                />
-
-                {/* Request 按钮 */}
-                <Flex mt={4}>
-                  <RequestModal />
+                  {/* Request 按钮 */}
+                  <Button colorScheme="blue">Request</Button>
                 </Flex>
-                {/* <Button colorScheme="blue">Request</Button> */}
-              </Flex>
+              ) : (
+                <Text>Log in to request these items.</Text>
+              )}
             </VStack>
           </Box>
         </Flex>
