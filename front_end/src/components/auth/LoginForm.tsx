@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   GridItem,
   Container,
@@ -21,8 +21,8 @@ const LoginForm = () => {
   const toast = useToast();
   const {setUser} = useUser();
   const navigate = useNavigate();
-  const [formData, setFormData] = useState<LoginFormType>({
-    username: '',
+  const [formData, setFormData] = useState({
+    clubEmail: '',
     password: ''
   });
   const [isLoading, setIsLoading] = useState(false);
@@ -32,14 +32,13 @@ const LoginForm = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:8000/api/auth/login', {
+      const response = await fetch('http://localhost:8000/authenticate', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
       });
-
       const data = await response.json();
 
       if (response.ok) {
@@ -50,7 +49,7 @@ const LoginForm = () => {
           isClosable: true,
         });
         // save user info to local storage
-        setUser(data.user);
+        setUser(data);
         navigate('/');
       } else {
         throw new Error(data.message);
@@ -90,7 +89,7 @@ const LoginForm = () => {
             <VStack align="stretch" spacing={3}>
               <HStack>
                 <Text fontSize="xl" fontWeight="bold" color="gray.800">
-                  StorageRoom Management System
+                  ShareStore
                 </Text>
               </HStack>
               <Text fontSize="2xl" fontWeight="bold" color="gray.800">
@@ -102,12 +101,12 @@ const LoginForm = () => {
             <form onSubmit={handleSubmit} style={{ width: '100%' }}>
               <VStack spacing={4}>
                 <FormInput
-                  id="username"
+                  id="email"
                   label="Login"
                   icon="person"
-                  placeholder="Email or phone number"
-                  value={formData.username}
-                  onChange={(e) => setFormData({...formData, username: e.target.value})}
+                  placeholder="Club email"
+                  value={formData.clubEmail}
+                  onChange={(e) => setFormData({...formData, clubEmail: e.target.value})}
                 />
 
                 <FormInput
@@ -140,17 +139,6 @@ const LoginForm = () => {
                 >
                   Sign in
                 </Button>
-
-                <Button
-                  variant="outline"
-                  size="lg"
-                  width="full"
-                  borderColor="gray.200"
-                  color="gray.700"
-                  _hover={{ bg: 'gray.50' }}
-                >
-                  Or sign in with Google
-                </Button>
               </VStack>
             </form>
 
@@ -160,14 +148,6 @@ const LoginForm = () => {
               <Link color="blue.500" _hover={{ color: 'blue.600' }}>
                 Sign up now
               </Link>
-            </Grid>
-
-            {/* footer */}
-            <Grid templateColumns="1fr 1fr" gap={4}>
-              <Text fontSize="sm" color="gray.600">@StorageRoom Management System</Text>
-              <Text fontSize="sm" color="gray.500" justifySelf="end">
-                © Perfect Login 2025
-              </Text>
             </Grid>
           </VStack>
         </Container>

@@ -17,4 +17,4 @@ const ClubInventoryPage = () => {
   )
 }
 
-export default ClubInventoryPage
+export default ClubInventoryPage;
