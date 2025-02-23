@@ -2,7 +2,7 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
 import { Button, Textarea, Input, FormControl, FormLabel, FormErrorMessage, Select } from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import clubBg from '../assets/club.jpg';
 
 interface FormData {
@@ -15,6 +15,7 @@ interface FormData {
 }
 
 interface University {
+  _id: string;
   name: string;
 }
 
@@ -31,6 +32,7 @@ const ClubRegister: React.FC = () => {
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [universities, setUniversities] = useState<University[]>([]);
+  const navigate = useNavigate();
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -53,23 +55,50 @@ const ClubRegister: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = useCallback((e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validate()) {
       setIsSubmitting(true);
-      console.log('Form submitted:', formData);
-      setFormData({ clubName: '', description: '', email: '', university: '', password: '', budget: '' });
-      setErrors({});
-      setIsSubmitting(false);
+      try {
+        const response = await fetch('http://localhost:8000/clubs/create', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: formData.clubName,
+            clubEmail: formData.email,
+            password: formData.password,
+            school: formData.university,
+          }),
+        });
+
+        if (response.ok) {
+          alert('Registration successful!');
+          navigate('/login');
+        } else {
+          const data = await response.json();
+          alert(data.error || 'Registration failed');
+        }
+      } catch (error) {
+        alert('Registration failed, please check your input');
+      } finally {
+        setIsSubmitting(false);
+      }
     }
-  }, [formData]);
+  }, [formData, validate, navigate]);
 
   useEffect(() => {
     const fetchUniversities = async () => {
       try {
-        const response = await fetch('/api/universities'); // suppose to be the api endpoint
-        const data = await response.json();
-        setUniversities(data);
+        const response = await fetch('http://localhost:8000/schools');
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Fetched universities:', data);
+          setUniversities(data);
+        } else {
+          console.error('Failed to fetch universities');
+        }
       } catch (error) {
         console.error('Error fetching universities:', error);
       }
@@ -159,9 +188,9 @@ const ClubRegister: React.FC = () => {
                   value={formData.university}
                   onChange={handleChange}
                 >
-                  <option value="">University</option>
+                  <option value="">Select University</option>
                   {universities.map((university) => (
-                    <option key={university.name} value={university.name}>
+                    <option key={university._id} value={university._id}>
                       {university.name}
                     </option>
                   ))}

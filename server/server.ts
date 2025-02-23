@@ -7,9 +7,32 @@ import session from 'express-session';
 
 import clubRoutes from './routes/clubs.routes';
 import itemRoutes from './routes/items.routes';
+import schoolRoutes from './routes/schools.routes';
 import Club from './schemas/Club';
 
+dotenv.config();
+
 const app: Application = express();
+const PORT = process.env.PORT || 8000;
+
+// 添加数据库连接和错误处理
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/your_database')
+  .then(() => {
+    console.log('Successfully connected to MongoDB.');
+  })
+  .catch((error) => {
+    console.error('Error connecting to MongoDB:', error);
+  });
+
+// 监听数据库连接事件
+mongoose.connection.on('error', err => {
+  console.error('MongoDB connection error:', err);
+});
+
+mongoose.connection.on('disconnected', () => {
+  console.log('MongoDB disconnected');
+});
+
 app.use(cors());
 app.use(express.json());
 app.use(session({
@@ -24,13 +47,13 @@ app.use(session({
   }
 }));
 
-const db = mongoose.connect('mongodb://127.0.0.1:27017/SustainableShare').catch(err => console.log(err));
 app.get('/', (req: Request, res: Response) => {
   res.send('SERVER!!!');
 });
 
 app.use('/clubs', clubRoutes);
 app.use('/items', itemRoutes);
+app.use('/schools', schoolRoutes);
 
 app.post('/authenticate', async (req, res) => {
   const data = req.body;
@@ -46,8 +69,8 @@ app.post('/authenticate', async (req, res) => {
   res.status(200).json(cleanedClub);
 });
 
-const server = app.listen(8000, () => {
-  console.log(`Server is live.`);
+const server = app.listen(PORT, () => {
+  console.log(`Server is live on port ${PORT}`);
 });
 
 process.on('SIGINT', async () => {
