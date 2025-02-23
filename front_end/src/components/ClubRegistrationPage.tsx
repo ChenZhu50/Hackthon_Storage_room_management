@@ -1,8 +1,13 @@
 "use client"
 
 import React, { useState, useCallback } from 'react';
-import { Button, Textarea, Input, FormControl, FormLabel, FormErrorMessage } from '@chakra-ui/react';
+import { Button, Textarea, Input, FormControl, FormLabel, FormErrorMessage, VStack } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
+
+interface Leader {
+  name: string;
+  email: string;
+}
 
 interface FormData {
   clubName: string;
@@ -10,6 +15,7 @@ interface FormData {
   email: string;
   location: string;
   password: string;
+  leaders: Leader[];
 }
 
 const ClubRegister: React.FC = () => {
@@ -19,6 +25,7 @@ const ClubRegister: React.FC = () => {
     email: '',
     location: '',
     password: '',
+    leaders: [{ name: '', email: '' }], // Initialize with one leader
   });
 
   const [errors, setErrors] = useState<Partial<FormData>>({});
@@ -32,6 +39,23 @@ const ClubRegister: React.FC = () => {
     }));
   }, []);
 
+  const handleLeaderChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    const updatedLeaders = [...formData.leaders];
+    updatedLeaders[index] = { ...updatedLeaders[index], [name]: value };
+    setFormData((prevData) => ({
+      ...prevData,
+      leaders: updatedLeaders,
+    }));
+  };
+
+  const addLeader = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      leaders: [...prevData.leaders, { name: '', email: '' }],
+    }));
+  };
+
   const validate = (): boolean => {
     const newErrors: Partial<FormData> = {};
     if (!formData.clubName) newErrors.clubName = 'Club name is required';
@@ -39,6 +63,13 @@ const ClubRegister: React.FC = () => {
     if (!formData.email) newErrors.email = 'Email is required';
     if (!formData.location) newErrors.location = 'Location is required';
     if (!formData.password) newErrors.password = 'Password is required';
+
+    // Validate leaders
+    formData.leaders.forEach((leader, index) => {
+      if (!leader.name) newErrors[`leaderName${index}`] = 'Leader name is required';
+      if (!leader.email) newErrors[`leaderEmail${index}`] = 'Leader email is required';
+    });
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -49,7 +80,7 @@ const ClubRegister: React.FC = () => {
       setIsSubmitting(true);
       console.log('Form submitted:', formData);
       // Here you can handle the form submission, e.g., send data to an API
-      setFormData({ clubName: '', description: '', email: '', location: '', password: '' }); // Reset form
+      setFormData({ clubName: '', description: '', email: '', location: '', password: '', leaders: [{ name: '', email: '' }] }); // Reset form
       setErrors({}); // Clear errors
       setIsSubmitting(false);
     }
@@ -123,11 +154,43 @@ const ClubRegister: React.FC = () => {
           />
           <FormErrorMessage id="password-error">{errors.password}</FormErrorMessage>
         </FormControl>
-        <Button type="submit" isLoading={isSubmitting} mt={4}>Register Club</Button>
+        <h2>Club Leaders</h2>
+          {formData.leaders.map((leader, index) => (
+            <div key={index}>
+              <FormControl isInvalid={!!errors[`leaderName${index}`]}>
+                <FormLabel htmlFor={`leaderName${index}`}>Leader Name</FormLabel>
+                <Input
+                  id={`leaderName${index}`}
+                  type="text"
+                  name="name"
+                  value={leader.name}
+                  onChange={(e) => handleLeaderChange(index, e)}
+                  aria-describedby={`leaderName${index}-error`}
+                  maxWidth="400px"
+                />
+                <FormErrorMessage id={`leaderName${index}-error`}>{errors[`leaderName${index}`]}</FormErrorMessage>
+              </FormControl>
+              <FormControl isInvalid={!!errors[`leaderEmail${index}`]} mt={2}>
+                <FormLabel htmlFor={`leaderEmail${index}`}>Leader Email</FormLabel>
+                <Input
+                  id={`leaderEmail${index}`}
+                  type="email"
+                  name="email"
+                  value={leader.email}
+                  onChange={(e) => handleLeaderChange(index, e)}
+                  aria-describedby={`leaderEmail${index}-error`}
+                  maxWidth="400px"
+                />
+                <FormErrorMessage id={`leaderEmail${index}-error`}>{errors[`leaderEmail${index}`]}</FormErrorMessage>
+              </FormControl>
+            </div>
+          ))}
+          <Button onClick={addLeader} mt={2}>Add Another Leader</Button>
+      </form>
+      <Button type="submit" isLoading={isSubmitting} mt={4}>Register Club</Button>
         <Link to='/'>
           <Button mt={4} variant="outline">Go Back</Button>
         </Link>
-      </form>
     </div>
   );
 };
