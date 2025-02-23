@@ -1,18 +1,19 @@
 import { Grid, GridItem } from '@chakra-ui/react'
 import React, { useEffect, useState } from 'react'
-import Item from './Item';
+import ClubItemCard from './ClubItemCard';
 
-const Items = ({ club }) => {
-  const [items, setItems] = useState(['i']);
+const Items = () => {
+  const [items, setItems] = useState([]);
   useEffect(() => {
-    if (club) {
-      // do stuff
+    const run = async () => {
+      await fetch('http://localhost:8000/items/').then(res => res.json()).then(data => setItems(data));
     }
-  }, [club]);
+    run();
+  }, []);
   return (
     <Grid templateColumns='repeat(4, 1fr)' gap={15} id='items-grid'> 
       {items.map((item, i) => (
-        <Item key={i} id={item} />
+        <ClubItemCard key={item._id} id={item._id} name={item.title} quantity={item.quantity} clubName={null}/>
       ))}
     </Grid>
   )
