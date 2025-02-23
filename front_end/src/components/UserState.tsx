@@ -20,11 +20,16 @@ export const UserState = ({ children }) => {
       setUser(null);
       navigate('/');
     }
+    const fetchClubId = () => {
+      if (!user) return '';
+      return user._id;
+    }
     const functions = {
       loggedIn, 
       setUser,
       user,
-      signOut
+      signOut,
+      fetchClubId
     };
   return (
     <UserContext.Provider value={functions}>

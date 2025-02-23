@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
 import { 
   Button, 
   Text, 
@@ -11,6 +11,8 @@ import {
   Flex,
 } from '@chakra-ui/react';
 import ClubItemCard from './ClubItemCard';
+import Items from './Items';
+import { useUser } from './UserState';
 
 interface Item {
   id: string;
@@ -21,51 +23,34 @@ interface Item {
   imageUrl: string;
 }
 
-// 测试数据
-const testItems: Item[] = [
-  {
-    id: '1',
-    name: 'Tennis Racket',
-    quantity: 5,
-    clubId: 'club-1',
-    clubName: 'Tennis Club',
-    imageUrl: 'https://via.placeholder.com/200'
-  },
-  {
-    id: '2',
-    name: 'Basketball',
-    quantity: 10,
-    clubId: 'club-1',
-    clubName: 'Basketball Club',
-    imageUrl: 'https://via.placeholder.com/200'
-  },
-  {
-    id: '3',
-    name: 'Volleyball',
-    quantity: 8,
-    clubId: 'club-2',
-    clubName: 'Volleyball Club',
-    imageUrl: 'https://via.placeholder.com/200'
-  }
-];
-
 const ClubInventoryPage = () => {
   const { id } = useParams();
-  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
-  const [items] = useState<Item[]>(testItems);
+  
+  const {fetchClubId} = useUser();
+  const [club, setClub] = useState(null);
+  const [clubItems, setClubItems] = useState([]);
+  const admin = id === fetchClubId();
+        
+  useEffect(() => {
+    const run = async () => {
+      await fetch(`http://localhost:8000/clubs/${id}`).then(res => res.json()).then(data => setClub(data));
+      await fetch(`http://localhost:8000/clubs/${id}/items`).then(res => res.json()).then(data => setClubItems(data));
+    }
+    run();
+  }, [id])
 
-  const clubItems = items.filter(item => 
-    item.clubId === id &&
-    item.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // const clubItems = items.filter(item => 
+  //   item.clubId === clubId &&
+  //   item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  // );
 
   return (
     <main id="home-content">
       <Container maxW="1440px" py={8}>
         <VStack spacing={8} align="stretch">
           <Flex justify="space-between" align="center">
-            <Text fontSize="4xl">Club Inventory</Text>
+            <Text fontSize="4xl"><b>{club?.name}</b> Club Inventory</Text>
             <HStack spacing={4}>
               <Input
                 placeholder="Search items..."
@@ -87,7 +72,7 @@ const ClubInventoryPage = () => {
             spacing={6}
           >
             {clubItems.map(item => (
-              <ClubItemCard key={item.id} {...item} />
+              <ClubItemCard key={item._id} {...item} />
             ))}
           </SimpleGrid>
         </VStack>
