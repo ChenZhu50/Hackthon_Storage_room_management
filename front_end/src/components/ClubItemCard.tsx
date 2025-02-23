@@ -7,6 +7,7 @@ import {
   Badge,
 } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 interface ClubItemCardProps {
   id: string;
@@ -49,15 +50,17 @@ const ClubItemCard = ({ id, name, quantity, imageUrl, clubName }: ClubItemCardPr
             Available: {quantity}
           </Badge>
         </VStack>
+
+        <Link to={`/items/${id}`}>
+          <Button
+            size="sm"
+            width="full"
+            colorScheme="blue"
+          >
+            Show More Details
+          </Button>
+        </Link>
         
-        <Button
-          size="sm"
-          width="full"
-          colorScheme="blue"
-          onClick={() => navigate(`/items/${id}`)}
-        >
-          Show More Details
-        </Button>
       </VStack>
     </Box>
   );

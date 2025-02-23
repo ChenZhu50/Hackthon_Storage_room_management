@@ -9,6 +9,15 @@ router.get('/', async (req: Request, res: Response) => {
     res.status(200).json(allItems);
 })
 
+router.get('/:id', async (req: Request, res: Response) => {
+    const allItems = await Item.findById(req.params.id).populate('club').populate('requests');
+    if (!allItems) {
+        res.status(404).send({error: "Unable to find item with specified id."});
+        return;
+    }
+    res.status(200).json(allItems);
+})
+
 router.post('/create', async (req: Request, res: Response) => {
     try {
         const data = req.body;

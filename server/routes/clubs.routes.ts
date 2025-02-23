@@ -34,6 +34,7 @@ router.get('/:id/items', async (req: Request, res: Response) => {
             res.status(404).send({message: "Failed to retrieve club by ID"});
             return;
         }
+        const clubItems = club.items;
         res.status(200).send(club.items);
     } catch (err) {
         res.status(500).send({message: 'Internal server error'});
@@ -76,6 +77,33 @@ router.put('/like/:itemId', async (req, res) => {
         await Club.findByIdAndUpdate(data.clubId, {'$pull': {likes: itemId}});
     } else await Club.findByIdAndUpdate(data.clubId, {'$push': {likes: itemId}});
     res.status(200).send("Successful");
+});
+
+router.post('/:id/listings/create', async (req, res) => {
+    const clubId = req.params.id;
+    const listingData = req.body;
+    const newItem = await Item.create(listingData);
+    if (!newItem) {
+        res.status(401).send({error: "Could not create new item."})
+        return;
+    }
+    const updateClubListings = await Club.findByIdAndUpdate(clubId, {'$push': {items: newItem}});
+    console.log(updateClubListings);
+    if (!updateClubListings) {
+        res.status(404).send({error: "Failed to retrieve and update listing."})
+        return;
+    }
+    res.status(200).send(newItem);
+});
+
+router.get('/:id/listings', async (req, res) => {
+    const clubId = req.params.id;
+    const listings = await Club.findById(clubId).populate('items');
+    if (!listings) {
+        res.status(404).send({error: "Failed to retrieve listings."})
+        return;
+    }
+    res.status(200).send(listings.items);
 });
 
 router.post('/testuser', async (req, res) => {

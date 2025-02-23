@@ -8,11 +8,12 @@ const Header = () => {
   return (
     <section className="header">
       <Link to="/">
-        <Text fontSize="4xl">SustainableShare</Text>
+        <Text fontSize="4xl">ShareStore</Text>
       </Link>
       <HStack spacing={4}>
         {loggedIn() ? (
           <>
+            <Text>{user?.name}</Text>
             <Link to={`/clubs/${fetchClubId()}/inventory`}>
               <Button>Club Inventory</Button>
             </Link>

@@ -12,29 +12,28 @@ import {
   Text,
   useToast,
   Icon,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper
 } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
-import { useNavigate } from 'react-router-dom';
-
-interface NewListing {
-  title: string;
-  description: string;
-  quantity: number;
-  clubId: string;
-  image: File | null;
-}
+import { useNavigate, useParams } from 'react-router-dom';
+import { useUser } from '../components/UserState';
 
 const NewListingPage = () => {
   const navigate = useNavigate();
+  const {fetchClubId, loggedIn} = useUser();
   const toast = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [formData, setFormData] = useState<NewListing>({
+  const [formData, setFormData] = useState({
     title: '',
     description: '',
     quantity: 0,
-    clubId: 'debate-club', // 这里可以根据实际需求修改
-    image: null
+    club: fetchClubId(),
+    requests: []
   });
 
   const handleImageClick = () => {
@@ -56,25 +55,29 @@ const NewListingPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // TODO: 实现API调用
-      console.log('Submitting new listing:', formData);
-      toast({
-        title: 'Item created successfully',
-        status: 'success',
-        duration: 3000,
-        isClosable: true,
+      console.log("SUBMITTING");
+      console.log(formData);
+      const response = await fetch(`http://localhost:8000/clubs/${fetchClubId()}/listings/create`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({...formData, by: fetchClubId()}),
       });
-      navigate(`/clubs/${formData.clubId}/inventory`);
+      console.log(response);
+      const data = await response.json();
+      if (response.ok) navigate(`/items/${data}`);
+
+      navigate(`/clubs/${formData.club}/inventory`);
     } catch (error) {
-      toast({
-        title: 'Failed to create item',
-        status: 'error',
-        duration: 3000,
-        isClosable: true,
-      });
+
     }
   };
-
+  if (!loggedIn()) {
+    return (
+      <Text>You must be logged in to view this page.</Text>
+    )
+  }
   return (
     <Container maxW="800px" py={8}>
       <VStack spacing={8} align="stretch">
@@ -143,12 +146,18 @@ const NewListingPage = () => {
             {/* Quantity */}
             <FormControl isRequired>
               <FormLabel>Quantity</FormLabel>
-              <Input
-                type="number"
+              <NumberInput
                 value={formData.quantity}
-                onChange={(e) => setFormData({ ...formData, quantity: parseInt(e.target.value) })}
-                min={0}
-              />
+                onChange={(_, value) => setFormData({...formData, quantity: value})}
+                min={1}
+                mb={3}
+              >
+                <NumberInputField />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
             </FormControl>
 
             {/* Submit Button */}
