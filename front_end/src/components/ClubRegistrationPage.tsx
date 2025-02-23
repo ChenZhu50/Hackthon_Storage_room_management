@@ -56,7 +56,7 @@ const ClubRegister: React.FC = () => {
   }, [formData]);
 
   return (
-    <div style={{ maxWidth: '400px', margin: 'auto', padding: '2rem', border: '1px solid #ccc', borderRadius: '8px', backgroundColor: '#CCCCCC'}}>
+    <div style={{ margin: 'auto', padding: '2rem', border: '1px solid #ccc', backgroundColor: '#CCCCCC'}}>
       <h1>Club Registration</h1>
       <form onSubmit={handleSubmit}>
         <FormControl isInvalid={!!errors.clubName}>
@@ -68,6 +68,7 @@ const ClubRegister: React.FC = () => {
             value={formData.clubName}
             onChange={handleChange}
             aria-describedby="clubName-error"
+            maxWidth="400px"
           />
           <FormErrorMessage id="clubName-error">{errors.clubName}</FormErrorMessage>
         </FormControl> 
@@ -79,6 +80,7 @@ const ClubRegister: React.FC = () => {
             value={formData.description}
             onChange={handleChange}
             aria-describedby="description-error"
+            maxWidth="400px"
           />
           <FormErrorMessage id="description-error">{errors.description}</FormErrorMessage>
         </FormControl>
@@ -91,6 +93,7 @@ const ClubRegister: React.FC = () => {
             value={formData.email}
             onChange={handleChange}
             aria-describedby="email-error"
+            maxWidth="400px"
           />
           <FormErrorMessage id="email-error">{errors.email}</FormErrorMessage>
         </FormControl>
@@ -103,6 +106,7 @@ const ClubRegister: React.FC = () => {
             value={formData.location}
             onChange={handleChange}
             aria-describedby="location-error"
+            maxWidth="400px"
           />
           <FormErrorMessage id="location-error">{errors.location}</FormErrorMessage>
         </FormControl>
@@ -115,6 +119,7 @@ const ClubRegister: React.FC = () => {
             value={formData.password}
             onChange={handleChange}
             aria-describedby="password-error"
+            maxWidth="400px"
           />
           <FormErrorMessage id="password-error">{errors.password}</FormErrorMessage>
         </FormControl>
