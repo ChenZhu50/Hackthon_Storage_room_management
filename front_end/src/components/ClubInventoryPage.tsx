@@ -73,7 +73,7 @@ const ClubInventoryPage = () => {
             spacing={6}
           >
             {clubItems.map(item => (
-              <ClubItemCard key={item._id} {...item} />
+              <ClubItemCard key={item._id} id={item._id} name={item.title} quantity={item.quantity} clubName={null}/>
             ))}
           </SimpleGrid>
         </VStack>

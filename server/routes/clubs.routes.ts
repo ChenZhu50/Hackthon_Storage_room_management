@@ -34,6 +34,7 @@ router.get('/:id/items', async (req: Request, res: Response) => {
             res.status(404).send({message: "Failed to retrieve club by ID"});
             return;
         }
+        const clubItems = club.items;
         res.status(200).send(club.items);
     } catch (err) {
         res.status(500).send({message: 'Internal server error'});

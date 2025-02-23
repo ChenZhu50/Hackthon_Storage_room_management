@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { FaHeart, FaRegHeart, FaEdit } from "react-icons/fa";
 import RequestModal from "./Request";
@@ -17,12 +17,21 @@ import {
 import { useUser } from "./UserState";
 
 const ItemPage = () => {
-  const { itemId } = useParams();
+  const { id } = useParams();
   const [itemObject, setItemObject] = useState(null);
   const { user, loggedIn, fetchClubId } = useUser();
   const [liked, setLiked] = useState(false);
 
   const authenticated = loggedIn();
+  const isAdmin = authenticated && itemObject?.club._id === fetchClubId();
+
+  useEffect(() => {
+    const run = async () => {
+      console.log(id);
+      await fetch(`http://localhost:8000/items/${id}`).then(res => res.json()).then(data => setItemObject(data));
+    }
+    run();
+  }, [id])
 
   const handleLike = item => {
     const like = async () => {
@@ -41,17 +50,7 @@ const ItemPage = () => {
     setLiked(!liked);
   }
 
-  // 示例物品数据
-  const itemData = {
-    name: "Plates",
-    description:
-      "These are typical plates, we have like 100 of them, so come pick it up.",
-    quantity: 100,
-    clubName: "Debate Club",
-    imageUrl:
-      "https://www.ikea.com/us/en/images/products/ikea-365-plate-white__0712377_pe728796_s5.jpg?f=s",
-    status: "Available", // "Available", "Out of Stock"
-  };
+  console.log(itemObject);
 
   return (
     <Box bg="gray.50" minH="100vh" py={8}>
@@ -74,8 +73,8 @@ const ItemPage = () => {
           {/** 左侧图片 */}
           <Box flex="1" textAlign="center">
             <Image
-              src={itemData.imageUrl}
-              alt={itemData.name}
+              src={itemObject?.imageUrl}
+              alt={itemObject?.title}
               borderRadius="md"
               boxShadow="sm"
               w="100%"
@@ -98,36 +97,38 @@ const ItemPage = () => {
           <Box flex="2">
             <VStack align="flex-start" spacing={4}>
               <Heading size="lg" color="black.700">
-                {itemData.name}
+                {itemObject?.title}
               </Heading>
               <Text fontSize="md" color="black.600">
-                {itemData.description}
+                {itemObject?.description}
               </Text>
-              <Text color="black.500">Quantity: {itemData.quantity}</Text>
-              <Text color="black.500">From: {itemData.clubName}</Text>
+              <Text color="black.500">Quantity: {itemObject?.quantity}</Text>
+              <Text color="black.500">From: {itemObject?.club.name}</Text>
 
               {/** 物品状态 Badge */}
               <Badge colorScheme="green" fontSize="1.2em">
-                {itemData.status}
+                AVAILABLE
               </Badge>
               
               {authenticated ? (
                 <Flex gap={3}>
-                  {/* 爱心按钮 */}
-                  <IconButton
-                    aria-label="Like"
-                    icon={liked ? <FaHeart /> : <FaRegHeart />} // 切换填充/空心图标
-                    color={liked ? "red.500" : "gray.500"} // 填充时红色，未填充时灰色
-                    bg="transparent" // 让按钮背景透明，没有方框
-                    _hover={{ color: liked ? "red.600" : "gray.600" }} // 悬停时颜色加深
-                    fontSize="24px" // 让图标更大
-                    onClick={() => handleLike(itemId)} // 点击切换状态
-                  />
+                  {isAdmin ? null : (
+                    <>
+                      <IconButton
+                        aria-label="Like"
+                        icon={liked ? <FaHeart /> : <FaRegHeart />} // 切换填充/空心图标
+                        color={liked ? "red.500" : "gray.500"} // 填充时红色，未填充时灰色
+                        bg="transparent" // 让按钮背景透明，没有方框
+                        _hover={{ color: liked ? "red.600" : "gray.600" }} // 悬停时颜色加深
+                        fontSize="24px" // 让图标更大
+                        onClick={() => handleLike(id)} // 点击切换状态
+                      />
 
-                  {/* Request 按钮 */}
-                  <Flex>
-                    <RequestModal id={itemId}/>
-                  </Flex>
+                      <Flex>
+                        <RequestModal id={id}/>
+                      </Flex>
+                    </>
+                  )}
                 </Flex>
               ) : (
                 <Text>Log in to request these items.</Text>
