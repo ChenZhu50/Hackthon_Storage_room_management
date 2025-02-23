@@ -15,7 +15,7 @@ interface FormData {
   email: string;
   location: string;
   password: string;
-  budget: number | ''; // Add budget field
+  budget: number | '';
   leaders: Leader[];
 }
 
@@ -26,7 +26,7 @@ const ClubRegister: React.FC = () => {
     email: '',
     location: '',
     password: '',
-    budget: '', // Initialize budget
+    budget: '',
     leaders: [{ name: '', email: '' }],
   });
 
@@ -65,7 +65,7 @@ const ClubRegister: React.FC = () => {
     if (!formData.email) newErrors.email = 'Email is required';
     if (!formData.location) newErrors.location = 'Location is required';
     if (!formData.password) newErrors.password = 'Password is required';
-    if (formData.budget === '' || formData.budget < 0) newErrors.budget = 'Budget must be a positive number'; // Validate budget
+    if (formData.budget === '' || formData.budget < 0) newErrors.budget = 'Budget must be a positive number';
 
     // Validate leaders
     formData.leaders.forEach((leader, index) => {
@@ -158,7 +158,7 @@ const ClubRegister: React.FC = () => {
           <FormErrorMessage id="password-error">{errors.password}</FormErrorMessage>
         </FormControl>
         <FormControl isInvalid={!!errors.budget} mt={4}>
-          <FormLabel htmlFor="budget">Budget</FormLabel>
+          <FormLabel htmlFor="budget">Budget ($)</FormLabel>
           <Input
             id="budget"
             type="number"
