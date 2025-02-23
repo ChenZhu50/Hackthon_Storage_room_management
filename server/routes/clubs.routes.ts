@@ -1,6 +1,7 @@
 import express from 'express';
 import { Request, Response } from 'express';
 import Club from '../schemas/Club';
+import Item from '../schemas/Item';
 import bcrypt from 'bcrypt';
 import { ObjectId } from 'mongodb';
 const router = express.Router();
@@ -60,6 +61,20 @@ router.post('/create', async (req, res) => {
     } catch (err) {
         res.status(400).send({error: "An unknown error has occurred."});
     }
+});
+
+router.put('/like/:itemId', async (req, res) => {
+    const itemId = req.params.itemId;
+    const itemValue = await Item.findById(itemId);
+    if (!itemValue) {
+        res.status(404).send({error: "Item does not exist."})
+        return;
+    }
+    const data = req.body;
+    if (data.liked) {
+        await Club.findByIdAndUpdate(data.clubId, {'$pull': {likes: itemId}});
+    } else await Club.findByIdAndUpdate(data.clubId, {'$push': {likes: itemId}});
+    res.status(200).send("Successful");
 });
 
 router.post('/testuser', async (req, res) => {
