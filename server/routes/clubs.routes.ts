@@ -22,7 +22,8 @@ router.post('/create', async (req, res) => {
             clubEmail: data.clubEmail,
             password: await bcrypt.hash(data.password, 10),
             school: data.school,
-            items: []
+            items: [],
+            likes: []
         })
         if (!newClub) {
             res.status(401).send({error: "Failure in creating new club."});
