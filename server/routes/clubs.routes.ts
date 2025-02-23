@@ -24,6 +24,19 @@ router.get('/:id', async (req: Request, res: Response) => {
         res.status(500).send({message: 'Internal server error'});
     }  
 })
+router.get('/:id/items', async (req: Request, res: Response) => {
+    try {
+        const id = req.params.id;
+        const club = await Club.findById(id).populate('items');
+        if (!club) {
+            res.status(404).send({message: "Failed to retrieve club by ID"});
+            return;
+        }
+        res.status(200).send(club.items);
+    } catch (err) {
+        res.status(500).send({message: 'Internal server error'});
+    }  
+})
 
 router.post('/create', async (req, res) => {
     try {
