@@ -1,6 +1,7 @@
 // src/ClubList.tsx
 import React, { useEffect, useState } from 'react';
 import { Club } from './types';
+import { Button } from '@chakra-ui/react';
 
 const sampleClubs: Club[] = [
   {
@@ -119,7 +120,7 @@ const ClubList: React.FC = () => {
         {editingClub ? (
           <button onClick={handleUpdateClub}>Update Club</button>
         ) : (
-          <button onClick={handleAddClub}>Add Club</button>
+          <Button onClick={handleAddClub}>Add Club</Button>
         )}
       </div>
       <table>
@@ -155,8 +156,8 @@ const ClubList: React.FC = () => {
                 </table>
               </td>
               <td>
-                <button onClick={() => handleEditClub(club)}>Edit</button>
-                <button onClick={() => handleDeleteClub(club.id)}>Delete</button>
+                <Button onClick={() => handleEditClub(club)}>Edit</Button>
+                <Button onClick={() => handleDeleteClub(club.id)}>Delete</Button>
               </td>
             </tr>
           ))}
