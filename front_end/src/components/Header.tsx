@@ -4,7 +4,7 @@ import { useUser } from "./UserState";
 import { Link, useNavigate } from "react-router-dom";
 
 const Header = () => {
-    const { user, loggedIn, signOut } = useUser();
+    const { user, loggedIn, signOut, fetchClubId } = useUser();
   return (
     <section className='header'>
         <Link to='/'>
@@ -12,7 +12,7 @@ const Header = () => {
         </Link>
         {loggedIn() ? (
             <div id='buttons-group'>
-                <Link to={`/clubs/${"1"}/inventory`}>
+                <Link to={`/clubs/${fetchClubId()}/inventory`}>
                     <Button>Club Inventory</Button>
                 </Link>
                 <Button onClick={signOut}>Sign Out</Button>
