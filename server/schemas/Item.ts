@@ -11,5 +11,5 @@ const itemSchema = new Schema<IItem>({
     club: {type: Schema.Types.ObjectId, ref: "Club", required: true }
 });
 
-const Item = model<IUser>('Item', itemSchema);
+const Item = model<IItem>('Item', itemSchema);
 export default Item;

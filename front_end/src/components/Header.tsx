@@ -4,18 +4,18 @@ import { useUser } from "./UserState";
 import { Link, useNavigate } from "react-router-dom";
 
 const Header = () => {
-    const { user, loggedIn } = useUser();
+    const { user, loggedIn, signOut } = useUser();
   return (
     <section className='header'>
         <Link to='/'>
             <Text fontSize='4xl'>SustainableShare</Text>
         </Link>
-        {true ? (
+        {loggedIn() ? (
             <div id='buttons-group'>
                 <Link to={`/clubs/${"1"}/inventory`}>
                     <Button>Club Inventory</Button>
                 </Link>
-                <Button>Sign Out</Button>
+                <Button onClick={signOut}>Sign Out</Button>
             </div>
         ) : (
             <div id='buttons-group'>

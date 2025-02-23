@@ -15,7 +15,7 @@ const HomePageContent = () => {
       {sortMenu && (
         <SortItemsMenu />
       )}
-      <Items />
+      <Items club={null} />
     </section>
   )
 }
