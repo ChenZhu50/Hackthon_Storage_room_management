@@ -13,7 +13,7 @@ const Items = () => {
   return (
     <Grid templateColumns='repeat(4, 1fr)' gap={15} id='items-grid'> 
       {items.map((item, i) => (
-        <ClubItemCard key={item._id} id={item._id} name={item.title} quantity={item.quantity} clubName={null}/>
+        <ClubItemCard key={item._id} id={item._id} name={item.title} quantity={item.quantity} imageUrl={item.imageUrl} clubName={null}/>
       ))}
     </Grid>
   )

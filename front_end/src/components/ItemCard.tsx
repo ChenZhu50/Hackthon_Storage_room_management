@@ -5,8 +5,8 @@ interface ItemCardProps {
   id: string;
   name: string;
   quantity: number;
-  club: string;
   imageUrl: string;
+  club: string;
 }
 
 const ItemCard = ({ id, name, quantity, club, imageUrl }: ItemCardProps) => {
