@@ -39,7 +39,9 @@ const Header = () => {
           <Link to="/login">
             <Button mr={2}>Log In</Button>
           </Link>
-          <Button>Sign Up</Button>
+          <Link to='/register'>
+            <Button>Register</Button>
+          </Link>
         </div>
       )}
     </section>
