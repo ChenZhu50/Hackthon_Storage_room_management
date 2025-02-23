@@ -1,4 +1,5 @@
 import LoginPage from './pages/LoginPage';
+import SignUpPage from './pages/SignUpPage';
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import './App.css'
@@ -15,6 +16,7 @@ function App() {
         <Routes>
           <Route path="/items/:id" element={<ItemPage />}/>
           <Route path="/login" element={<LoginPage />}/>
+          <Route path="/signup" element={<SignUpPage />}/>
           <Route path="/" element={<HomePage />}/>
         </Routes>
       </Layout>
