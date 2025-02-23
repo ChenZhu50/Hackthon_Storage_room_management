@@ -33,44 +33,45 @@ const ItemPage = () => {
     run();
   }, [id])
 
-  const handleLike = item => {
+  const handleLike = (item) => {
     const like = async () => {
-      const response = await fetch(`http://localhost:8000/clubs/like/${item}`, {
-        method: 'PUT',
+      await fetch(`http://localhost:8000/clubs/like/${item}`, {
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           clubId: fetchClubId(),
-          liked: liked
+          liked: liked,
         }),
       });
-    }
+    };
     like();
     setLiked(!liked);
-  }
+  };
 
-  console.log(itemObject);
+  // **示例申请列表**
+  const requests = [
+    {
+      club: "WiCS",
+      quantity: 20,
+      message: "We would like to borrow plates to serve food for the HopperHacks X 2025 event. Thank you!",
+    },
+    {
+      club: "Gourmet Club",
+      quantity: 30,
+      message: "We would like to borrow plates to host a food event on Friday. Thank you!",
+    },
+  ];
 
   return (
     <Box bg="gray.50" minH="100vh" py={8}>
-      {/** 外层容器，限制最大宽度并居中 */}
-      <Box
-        maxW="1200px"
-        mx="auto"
-        bg="white"
-        p={6}
-        borderRadius="md"
-        boxShadow="md"
-      >
+      <Box maxW="1200px" mx="auto" bg="white" p={6} borderRadius="md" boxShadow="md">
         <Divider mb={6} />
 
-        {/** 主体布局：左侧图片 + 右侧详情 */}
-        <Flex
-          direction={["column", "column", "row"]} // 小屏幕时自动换行
-          gap={6}
-        >
-          {/** 左侧图片 */}
+        {/* 主体布局：左侧图片 + 右侧详情 */}
+        <Flex direction={["column", "column", "row"]} gap={6}>
+          {/* 左侧图片 */}
           <Box flex="1" textAlign="center">
             <Image
               src={itemObject?.imageUrl}
@@ -93,7 +94,7 @@ const ItemPage = () => {
             right="100px"
           />
 
-          {/** 右侧商品详情 */}
+          {/* 右侧商品详情 */}
           <Box flex="2">
             <VStack align="flex-start" spacing={4}>
               <Heading size="lg" color="black.700">
@@ -105,11 +106,11 @@ const ItemPage = () => {
               <Text color="black.500">Quantity: {itemObject?.quantity}</Text>
               <Text color="black.500">From: {itemObject?.club.name}</Text>
 
-              {/** 物品状态 Badge */}
+              {/* 物品状态 Badge */}
               <Badge colorScheme="green" fontSize="1.2em">
                 AVAILABLE
               </Badge>
-              
+
               {authenticated ? (
                 <Flex gap={3}>
                   {isAdmin ? null : (
@@ -123,7 +124,6 @@ const ItemPage = () => {
                         fontSize="24px" // 让图标更大
                         onClick={() => handleLike(id)} // 点击切换状态
                       />
-
                       <Flex>
                         <RequestModal id={id}/>
                       </Flex>
@@ -136,6 +136,24 @@ const ItemPage = () => {
             </VStack>
           </Box>
         </Flex>
+      </Box>
+
+      {/* 申请列表 Box */}
+      <Box maxW="1200px" mx="auto" mt={6} bg="white" p={6} borderRadius="md" boxShadow="md">
+        <Heading size="md" mb={4}>
+          Requests for this item
+        </Heading>
+        {requests.length > 0 ? (
+          requests.map((req, index) => (
+            <Box key={index} p={4} mb={3} borderWidth="1px" borderRadius="md">
+              <Text fontWeight="bold">{req.club}</Text>
+              <Text>Quantity: {req.quantity}</Text>
+              <Text fontStyle="italic">"{req.message}"</Text>
+            </Box>
+          ))
+        ) : (
+          <Text>No requests yet.</Text>
+        )}
       </Box>
     </Box>
   );
