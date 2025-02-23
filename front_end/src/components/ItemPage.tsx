@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { FaHeart, FaRegHeart, FaEdit } from "react-icons/fa";
+import RequestModal from "./Request";
 import {
   Box,
   Flex,
@@ -50,7 +51,6 @@ const ItemPage = () => {
     imageUrl:
       "https://www.ikea.com/us/en/images/products/ikea-365-plate-white__0712377_pe728796_s5.jpg?f=s",
     status: "Available", // "Available", "Out of Stock"
-    
   };
 
   return (
@@ -110,7 +110,7 @@ const ItemPage = () => {
               <Badge colorScheme="green" fontSize="1.2em">
                 {itemData.status}
               </Badge>
-
+              
               {authenticated ? (
                 <Flex gap={3}>
                   {/* 爱心按钮 */}
@@ -130,7 +130,6 @@ const ItemPage = () => {
               ) : (
                 <Text>Log in to request these items.</Text>
               )}
-              
             </VStack>
           </Box>
         </Flex>
