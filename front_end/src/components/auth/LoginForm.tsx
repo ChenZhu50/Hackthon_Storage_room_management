@@ -5,23 +5,22 @@ import {
   VStack,
   HStack,
   Text,
-  FormControl,
-  Input,
   Button,
   Checkbox,
   Link,
   Grid,
   useToast,
-  InputGroup,
-  InputLeftElement,
-  FormLabel,
   Box
 } from '@chakra-ui/react';
 import FormInput from '../common/FormInput';
 import type { LoginForm as LoginFormType } from '../../types/auth';
+import { useNavigate } from 'react-router-dom';
+import { useUser } from '../UserState';
 
 const LoginForm = () => {
   const toast = useToast();
+  const {setUser} = useUser();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<LoginFormType>({
     username: '',
     password: ''
@@ -45,20 +44,21 @@ const LoginForm = () => {
 
       if (response.ok) {
         toast({
-          title: '登录成功',
+          title: 'login success',
           status: 'success',
           duration: 3000,
           isClosable: true,
         });
-        // 保存用户信息到本地存储
-        localStorage.setItem('user', JSON.stringify(data.user));
+        // save user info to local storage
+        setUser(data.user);
+        navigate('/');
       } else {
         throw new Error(data.message);
       }
     } catch (error) {
       toast({
-        title: '登录失败',
-        description: error instanceof Error ? error.message : '请检查用户名和密码',
+        title: 'login failed',
+        description: error instanceof Error ? error.message : 'please check your username and password',
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -86,7 +86,7 @@ const LoginForm = () => {
       >
         <Container maxW="400px">
           <VStack spacing={8} align="stretch">
-            {/* Logo和标题 */}
+            {/* Logo and title */}
             <VStack align="stretch" spacing={3}>
               <HStack>
                 <Text fontSize="xl" fontWeight="bold" color="gray.800">
@@ -98,7 +98,7 @@ const LoginForm = () => {
               </Text>
             </VStack>
 
-            {/* 登录表单 */}
+            {/* login form */}
             <form onSubmit={handleSubmit} style={{ width: '100%' }}>
               <VStack spacing={4}>
                 <FormInput
@@ -154,7 +154,7 @@ const LoginForm = () => {
               </VStack>
             </form>
 
-            {/* 注册链接 */}
+            {/* register link */}
             <Grid templateColumns="auto auto" justifyContent="center" gap={1}>
               <Text color="gray.600">Don't have an account?</Text>
               <Link color="blue.500" _hover={{ color: 'blue.600' }}>
@@ -162,7 +162,7 @@ const LoginForm = () => {
               </Link>
             </Grid>
 
-            {/* 页脚 */}
+            {/* footer */}
             <Grid templateColumns="1fr 1fr" gap={4}>
               <Text fontSize="sm" color="gray.600">@StorageRoom Management System</Text>
               <Text fontSize="sm" color="gray.500" justifySelf="end">
