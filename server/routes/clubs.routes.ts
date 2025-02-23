@@ -2,6 +2,7 @@ import express from 'express';
 import { Request, Response } from 'express';
 import Club from '../schemas/Club';
 import Item from '../schemas/Item';
+import ItemRequest from '../schemas/Request';
 import bcrypt from 'bcrypt';
 import { ObjectId } from 'mongodb';
 const router = express.Router();
