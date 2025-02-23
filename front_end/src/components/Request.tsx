@@ -14,18 +14,41 @@ import {
   Input,
   Textarea,
   useDisclosure,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper
 } from '@chakra-ui/react';
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
+import { useUser } from './UserState';
+import { useNavigate } from 'react-router-dom';
 
-const RequestModal = () => {
+const RequestModal = ({ id }) => {
   // 控制爱心按钮状态
   const [liked, setLiked] = useState(false);
+  const navigate = useNavigate();
 
   // 控制弹窗
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [quantity, setQuantity] = useState(""); // 存储用户输入的数量
-  const [message, setMessage] = useState(""); // 存储用户输入的消息
+  const [request, setRequest] = useState({
+    quantity: 0,
+    message: ''
+  })
+  const {fetchClubId} = useUser();
 
+  const handleMakeRequest = async e => {
+    e.preventDefault();
+    const response = await fetch(`http://localhost:8000/items/${id}/requests/create`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({...request, by: fetchClubId()}),
+      });
+      if (response.ok) navigate(`/items/${id}`);
+  }
+  console.log(request);
   return (
     <Box  p={6} borderRadius="md"  maxW="500px" position="relative">
       {/* 主要内容 */}
@@ -46,7 +69,6 @@ const RequestModal = () => {
           Request
         </Button>
       </Flex>
-
       {/* 弹出窗口 */}
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
@@ -54,30 +76,34 @@ const RequestModal = () => {
           <ModalHeader>Request Item</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
+            <form onSubmit={handleMakeRequest}>
+              <NumberInput
+                value={request.quantity}
+                onChange={(_, value) => setRequest({...request, quantity: value})}
+                min={1}
+                max={100} // CHANGE
+                mb={3}
+              >
+                <NumberInputField />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
+              {/* 输入请求消息 */}
+              <Textarea
+                placeholder="Enter your message"
+                value={request.message}
+                onChange={e => setRequest({...request, message: e.target.value})}
+                mb={3}
+              />
+              <Button colorScheme="blue" mr={3} type='submit'>
+                Submit Request
+              </Button>
+              <Button variant="ghost" onClick={onClose}>Cancel</Button>
+            </form>
             {/* 输入请求数量 */}
-            <Input
-              placeholder="Enter quantity"
-              type="number"
-              value={quantity}
-              onChange={(e) => setQuantity(e.target.value)}
-              mb={3}
-            />
-            {/* 输入请求消息 */}
-            <Textarea
-              placeholder="Enter your message"
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-            />
           </ModalBody>
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={() => {
-              console.log(`Requesting ${quantity} items with message: ${message}`);
-              onClose();
-            }}>
-              Submit Request
-            </Button>
-            <Button variant="ghost" onClick={onClose}>Cancel</Button>
-          </ModalFooter>
         </ModalContent>
       </Modal>
     </Box>

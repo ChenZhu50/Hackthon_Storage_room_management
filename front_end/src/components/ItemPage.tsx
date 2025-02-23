@@ -125,7 +125,9 @@ const ItemPage = () => {
                   />
 
                   {/* Request 按钮 */}
-                  <Button colorScheme="blue">Request</Button>
+                  <Flex>
+                    <RequestModal id={itemId}/>
+                  </Flex>
                 </Flex>
               ) : (
                 <Text>Log in to request these items.</Text>
