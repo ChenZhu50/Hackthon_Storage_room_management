@@ -7,6 +7,7 @@ import { UserState } from './components/UserState'
 import HomePage from './components/HomePage'
 import { Routes, Route } from 'react-router-dom'
 import ItemPage from './components/ItemPage'
+import ClubRegister from './components/ClubRegister';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/items/:id" element={<ItemPage />}/>
           <Route path="/login" element={<LoginPage />}/>
           <Route path="/" element={<HomePage />}/>
+          <Route path="/register" element={<ClubRegister />}/>
         </Routes>
       </Layout>
     </UserState>
