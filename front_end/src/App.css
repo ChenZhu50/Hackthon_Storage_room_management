@@ -76,3 +76,7 @@
 .club-item-page {
   padding: 15px;
 }
+#club-page-header {
+  display: flex;
+  justify-content: space-between;
+}
