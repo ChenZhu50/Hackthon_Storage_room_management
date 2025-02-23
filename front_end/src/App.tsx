@@ -7,6 +7,7 @@ import { UserState } from './components/UserState'
 import HomePage from './components/HomePage'
 import { Routes, Route } from 'react-router-dom'
 import ItemPage from './components/ItemPage'
+import AdminPage from './components/AdminPage'
 import ClubInventoryPage from './components/ClubInventoryPage';
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <Route path="/login" element={<LoginPage />}/>
           <Route path="/clubs/:id/inventory" element={<ClubInventoryPage />}/>
           <Route path="/" element={<HomePage />}/>
+          <Route path="/admin" element={<AdminPage />}/>
         </Routes>
       </Layout>
     </UserState>
