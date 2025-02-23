@@ -1,10 +1,22 @@
-import React, { createContext, useContext, useState } from 'react'
+import React, { createContext, useContext, useState, useEffect } from 'react'
 
-const UserContext = createContext();
+interface UserContextType {
+  user: any | null;
+  setUser: (user: any | null) => void;
+  loggedIn: () => boolean;
+}
+
+const UserContext = createContext<UserContextType | undefined>(undefined);
+
 export const UserState = ({ children }) => {
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState<any | null>(() => {
+        // 从 localStorage 初始化用户状态
+        const savedUser = localStorage.getItem('user');
+        return savedUser ? JSON.parse(savedUser) : null;
+    });
+    
     const loggedIn = (): boolean => {
-      return user ? true : false;
+        return user !== null;
     }
     const functions = {
       loggedIn, 
@@ -17,6 +29,11 @@ export const UserState = ({ children }) => {
     </UserContext.Provider>
   )
 }
+
 export const useUser = () => {
-    return useContext(UserContext);
+    const context = useContext(UserContext);
+    if (context === undefined) {
+        throw new Error('useUser must be used within a UserState provider');
+    }
+    return context;
 }

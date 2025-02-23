@@ -1,10 +1,10 @@
-import React from 'react'
-import { Text, Button } from '@chakra-ui/react'
-import { useUser } from './UserState'
-import { Link } from 'react-router-dom'
+import React from "react";
+import { Text, Button } from "@chakra-ui/react";
+import { useUser } from "./UserState";
+import { Link, useNavigate } from "react-router-dom";
 
 const Header = () => {
-    const { user, loggedIn } = useUser();
+  const { user, loggedIn } = useUser();
   return (
     <section className='header'>
         <Link to='/'>
@@ -26,7 +26,7 @@ const Header = () => {
             </div>
         )}
     </section>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;
