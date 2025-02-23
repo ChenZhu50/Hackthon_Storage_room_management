@@ -24,7 +24,7 @@ import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import { useUser } from './UserState';
 import { useNavigate } from 'react-router-dom';
 
-const RequestModal = ({ id }) => {
+const RequestModal = ({ id, quantity }) => {
   // 控制爱心按钮状态
   const [liked, setLiked] = useState(false);
   const navigate = useNavigate();
@@ -46,7 +46,10 @@ const RequestModal = ({ id }) => {
       },
       body: JSON.stringify({...request, by: fetchClubId()}),
     });
-    if (response.ok) navigate(`/items/${id}`);
+    if (response.ok) {
+      onClose();
+      navigate(`/items/${id}`);
+    }
   }
   console.log(request);
   return (
@@ -81,7 +84,7 @@ const RequestModal = ({ id }) => {
                 value={request.quantity}
                 onChange={(_, value) => setRequest({...request, quantity: value})}
                 min={1}
-                max={100} // CHANGE
+                max={quantity} // CHANGE
                 mb={3}
               >
                 <NumberInputField />

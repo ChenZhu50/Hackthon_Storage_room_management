@@ -30,14 +30,14 @@ router.post('/create', async (req: Request, res: Response) => {
 
 router.post('/:id/requests/create', async (req: Request, res: Response) => {
     try {
-        const itemId = req.params.itemId;
+        const itemId = req.params.id;
         const data = req.body;
         const newRequest = await ItemRequest.create(data);
         if (!newRequest) {
             res.status(401).send({error: 'Unable to make new request.'});
             return
         }
-        const updatedItem = await Item.findByIdAndUpdate(itemId, {"push": {requests: newRequest}});
+        const updatedItem = await Item.findByIdAndUpdate(itemId, {"$push": {requests: newRequest}});
         if (!newRequest) {
             res.status(401).send({error: 'Could not add requests to item.'});
             return
@@ -47,10 +47,19 @@ router.post('/:id/requests/create', async (req: Request, res: Response) => {
         res.status(400).send({error: 'An unknown error has occured.'});
     }
 })
-router.post('/:id/requests', async (req: Request, res: Response) => {
+router.get('/:id/requests', async (req: Request, res: Response) => {
     try {
-        const itemId = req.params.itemId;
-        const item = await Item.findById(itemId).populate('requests');
+        const itemId = req.params.id;
+        const item = await Item.findById(itemId)
+            .populate({
+                path: 'requests',
+                populate: {
+                    path: 'by', // Assuming 'by' is a reference to the Club model
+                    model: 'Club', // Ensure this matches your Mongoose model name
+                    select: 'name' // Only fetch 'name' field
+                }
+            })
+            .populate('club');
         if (!item) {
             res.status(404).send({error: 'Could not access item.'});
             return
