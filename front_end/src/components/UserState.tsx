@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom';
 
 interface UserContextType {
   user: any | null;
@@ -10,14 +11,20 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export const UserState = ({ children }) => {
     const [user, setUser] = useState(null);
+    const navigate = useNavigate();
     
     const loggedIn = (): boolean => {
         return user !== null;
     }
+    const signOut = () => {
+      setUser(null);
+      navigate('/');
+    }
     const functions = {
       loggedIn, 
       setUser,
-      user
+      user,
+      signOut
     };
   return (
     <UserContext.Provider value={functions}>
@@ -25,7 +32,6 @@ export const UserState = ({ children }) => {
     </UserContext.Provider>
   )
 }
-
 export const useUser = () => {
     const context = useContext(UserContext);
     if (!context) {

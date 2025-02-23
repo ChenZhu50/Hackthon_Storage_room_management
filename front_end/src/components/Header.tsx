@@ -4,7 +4,7 @@ import { useUser } from "./UserState";
 import { Link, useNavigate } from "react-router-dom";
 
 const Header = () => {
-    const { user, loggedIn } = useUser();
+    const { user, loggedIn, signOut } = useUser();
   return (
     <section className='header'>
         <Link to='/'>
@@ -15,7 +15,7 @@ const Header = () => {
                 <Link to={`/clubs/${"1"}/inventory`}>
                     <Button>Club Inventory</Button>
                 </Link>
-                <Button>Sign Out</Button>
+                <Button onClick={signOut}>Sign Out</Button>
             </div>
         ) : (
             <div id='buttons-group'>
