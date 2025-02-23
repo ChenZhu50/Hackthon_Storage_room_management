@@ -43,7 +43,7 @@ const ClubRegister: React.FC = () => {
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: 'auto', padding: '2rem', border: '1px solid #ccc', borderRadius: '8px', backgroundColor: '#203032'}}>
+    <div style={{ maxWidth: '400px', margin: 'auto', padding: '2rem', border: '1px solid #ccc', borderRadius: '8px', backgroundColor: '#CCCCCC'}}>
       <h1>Club Registration</h1>
       <form onSubmit={handleSubmit}>
         <div>
