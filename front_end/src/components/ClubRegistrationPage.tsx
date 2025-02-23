@@ -1,7 +1,7 @@
 "use client"
 
-import React, { useState, useCallback } from 'react';
-import { Button, Textarea, Input, FormControl, FormLabel, FormErrorMessage } from '@chakra-ui/react';
+import React, { useState, useCallback, useEffect } from 'react';
+import { Button, Textarea, Input, FormControl, FormLabel, FormErrorMessage, Select } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 
 interface Leader {
@@ -13,10 +13,14 @@ interface FormData {
   clubName: string;
   description: string;
   email: string;
-  location: string;
+  university: string;
   password: string;
   budget: number | '';
   leaders: Leader[];
+}
+
+interface University {
+  name: string;
 }
 
 const ClubRegister: React.FC = () => {
@@ -24,7 +28,7 @@ const ClubRegister: React.FC = () => {
     clubName: '',
     description: '',
     email: '',
-    location: '',
+    university: '',
     password: '',
     budget: '',
     leaders: [{ name: '', email: '' }],
@@ -32,6 +36,7 @@ const ClubRegister: React.FC = () => {
 
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [universities, setUniversities] = useState<University[]>([]);
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -63,7 +68,7 @@ const ClubRegister: React.FC = () => {
     if (!formData.clubName) newErrors.clubName = 'Club name is required';
     if (!formData.description) newErrors.description = 'Description is required';
     if (!formData.email) newErrors.email = 'Email is required';
-    if (!formData.location) newErrors.location = 'Location is required';
+    if (!formData.university) newErrors.university = 'University is required';
     if (!formData.password) newErrors.password = 'Password is required';
     if (formData.budget === '' || formData.budget < 0) newErrors.budget = 'Budget must be a positive number';
 
@@ -83,11 +88,25 @@ const ClubRegister: React.FC = () => {
       setIsSubmitting(true);
       console.log('Form submitted:', formData);
       // Here you can handle the form submission, e.g., send data to an API
-      setFormData({ clubName: '', description: '', email: '', location: '', password: '', budget: '', leaders: [{ name: '', email: '' }] }); // Reset form
+      setFormData({ clubName: '', description: '', email: '', university: '', password: '', budget: '', leaders: [{ name: '', email: '' }] }); // Reset form
       setErrors({}); // Clear errors
       setIsSubmitting(false);
     }
   }, [formData]);
+
+  useEffect(() => {
+    const fetchUniversities = async () => {
+      try {
+        const response = await fetch('/api/universities'); // suppose to be the api endpoint
+        const data = await response.json();
+        setUniversities(data);
+      } catch (error) {
+        console.error('Error fetching universities:', error);
+      }
+    };
+
+    fetchUniversities();
+  }, []);
 
   return (
     <div style={{ margin: 'auto', padding: '2rem', border: '1px solid #ccc', backgroundColor: '#ADD8E6'}}>
@@ -131,18 +150,24 @@ const ClubRegister: React.FC = () => {
           />
           <FormErrorMessage id="email-error">{errors.email}</FormErrorMessage>
         </FormControl>
-        <FormControl isInvalid={!!errors.location} mt={4}>
-          <FormLabel htmlFor="location">Location</FormLabel>
-          <Input
-            id="location"
-            type="text"
-            name="location"
-            value={formData.location}
+        <FormControl isInvalid={!!errors.university} mt={4}>
+          <FormLabel htmlFor="university">University</FormLabel>
+          <Select
+            id="university"
+            name="university"
+            value={formData.university}
             onChange={handleChange}
-            aria-describedby="location-error"
+            aria-describedby="university-error"
             maxWidth="400px"
-          />
-          <FormErrorMessage id="location-error">{errors.location}</FormErrorMessage>
+          >
+            <option value="">Select University</option>
+            {universities.map((university) => (
+              <option key={university.name} value={university.name}>
+                {university.name}
+              </option>
+            ))}
+          </Select>
+          <FormErrorMessage id="university-error">{errors.university}</FormErrorMessage>
         </FormControl>
         <FormControl isInvalid={!!errors.password} mt={4}>
           <FormLabel htmlFor="password">Password</FormLabel>

@@ -69,11 +69,6 @@ const LoginForm = () => {
 
   return (
     <GridItem
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-      bg="gray.300"
-      p={8}
     >
       <Box
         bg="gray.50"
