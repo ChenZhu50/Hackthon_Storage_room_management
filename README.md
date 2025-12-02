@@ -1,10 +1,11 @@
-# Sustainable Share
+# SustainableShare
 
 SustainableShare is a centralized platform that enables university clubs to manage their inventory, share surplus materials with other organizations, and reduce waste. It promotes sustainability, minimizes unnecessary spending, and cuts down on carbon emissions from constant reordering and shipping.
 
 Made with love at HopperHacks X ❤️
 
 Devpost: https://devpost.com/software/sharestore
+![original](https://github.com/user-attachments/assets/daeee7dd-34cc-4047-8122-7881a9d24706)
 
 ## Problem
 
@@ -63,3 +64,4 @@ SustainableShare allows clubs to register, track inventory, and share surplus it
 * Enhance security and access controls.
 * Refine public/private listing functionality.
 * Partner with student governments (e.g., SBU USG) to expand to other universities for national sustainability initiatives.
+
